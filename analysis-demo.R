@@ -10,11 +10,40 @@
 ################################################################################
 # 1. Load workspace  
 ################################################################################
+opals <- datashield.login(logindata, restore = "traj_assigned_22_10_20")
 
-## Here we will use three small cohorts to get the function working
-opals <- datashield.login(logindata, restore = "cbcl_ext_qc")
 
-opals <- opals["moba"]
+################################################################################
+# 2. Visualise data using DS scatter plots  
+################################################################################
+ds.scatterPlot(
+  x = "sdq_sub$ext_age_", 
+  y = "sdq_sub$ext_raw_", 
+  datasources = opals[sdq_opals])
+
+ds.scatterPlot(
+  x = "cbcl_sub$ext_age_", 
+  y = "cbcl_sub$ext_raw_", 
+  datasources = opals[cbcl_opals])
+
+ds.scatterPlot(
+  x = "mhrep$ext_age_", 
+  y = "mhrep$ext_pc_")
+
+
+## >1 time points SDQ = 
+## >1 time points CBCL = 
+
+################################################################################
+# 3. Visualise data using my method  
+################################################################################
+inma_bins <- c()
+moba_bins <- c()
+dnbc_bins <- c()
+chop_bins <- c()
+
+
+
 
 
 
