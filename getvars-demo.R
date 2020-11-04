@@ -6,6 +6,10 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
+################################################################################
+# 1. Load packages  
+################################################################################
+
 library(DSI)
 library(DSOpal)
 library(dsBaseClient)
@@ -16,14 +20,10 @@ library(tidyr)
 library(stringr)
 library(ggplot2)
 
-#library(remotes)
-#install_github("lifecycle-project/ds-helper", ref = "ds6")
+library(remotes)
+install_github("lifecycle-project/ds-helper")
 library(dsHelper)
 
-ls("package:dsBaseClient")
-ls("package:DSI")
-ls("package:DSOpal")
-ls("package:opal")
 
 
 ################################################################################
@@ -80,7 +80,6 @@ cohorts_tables <- bind_rows(
       "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities"))) %>%
   mutate(type = rep(c("nonrep", "yearrep", "mhrep"), 6))
 
-#datashield.tables(opals)
 
 ################################################################################
 # 2. Assign variables
@@ -190,158 +189,6 @@ ds.merge(
 datashield.workspace_save(opals, "mhtraj_6")
 opals <- datashield.login(logindata, restore = "mhtraj_6")
 
-ed_props <- dh.getStats(
-  df = "analysis_df", 
-  vars = "edu_m"
-)
-
-## Get the rank scores to convert to
-sii_vals <- ed_props[[1]] %>%
-  group_by(cohort) %>%
-  mutate(rank = case_when(
-    category == 1 ~ valid_perc/2,
-    category == 2 ~ valid_perc + lag(valid_perc) / 2, 
-    category == 3 ~ 100 - valid_perc / 2)) %>%
-  ungroup() %>% 
-  arrange(cohort) %>%
-  filter(cohort != "combined") %>%
-  select(category, cohort, rank) %>%
-  group_split(category)
-  
-## Now we take three subsets of the dataset and assign the correct values
-ds.asInteger("analysis_df$child_id", "id_int")
-ds.asInteger("analysis_df$edu_m", "edu_int")
-
-ds.cbind(
-  x = c("analysis_df", "id_int", "edu_int"), 
-  newobj = "analysis_df"
-)
-
-ds.dataFrameSubset(
-  df.name = "analysis_df", 
-  V1.name = "edu_int", 
-  V2.name = "1", 
-  keep.NAs = FALSE,
-  Boolean.operator = ">=", 
-  newobj = "mat_ed_sub"
-)
-
-c("1", "2", "3") %>%
-  map(
-    ~ds.dataFrameSubset(
-      df.name = "mat_ed_sub",
-      V1.name = "mat_ed_sub$edu_m", 
-      V2.name = ., 
-      Boolean.operator = "==",
-      newobj = paste0("edu_sub_", .)
-    )
-)
-
-sii_vals[[1]] %>%
-  pmap(function(cohort, rank, ...){
-    
-    ds.assign(
-      toAssign = paste0("edu_sub_1$id_int-edu_sub_1$id_int+1*", rank),
-      newobj = "mat_ed_rank_1", 
-      datasources = opals[cohort]
-    )
-  })
-#
-
-ds.assign(
-  toAssign = "edu_sub_1$id_int-edu_sub_1$id_int+1*34.15",
-  newobj = "mat_ed_rank_1", 
-  datasources = opals["moba"])
-
-ds.assign(
-  toAssign = "edu_sub_1$id_int-edu_sub_1$id_int+1*26.06",
-  newobj = "mat_ed_rank_1", 
-  datasources = opals["dnbc"])
-
-
-sii_vals[[2]] %>%
-  pmap(function(cohort, rank, ...){
-    
-    ds.assign(
-      toAssign = paste0("edu_sub_2$id_int-edu_sub_2$id_int+1*", rank),
-      newobj = "mat_ed_rank_2", 
-      datasources = opals[cohort]
-    )
-  })
-
-ds.assign(
-  toAssign = "edu_sub_2$id_int-edu_sub_2$id_int+1*63.9",
-  newobj = "mat_ed_rank_2", 
-  datasources = opals["moba"])
-
-ds.assign(
-  toAssign = "edu_sub_2$id_int-edu_sub_2$id_int+1*47.8",
-  newobj = "mat_ed_rank_2", 
-  datasources = opals["dnbc"])
-
-
-
-sii_vals[[3]] %>%
-  pmap(function(cohort, rank, ...){
-    
-    ds.assign(
-      toAssign = paste0("edu_sub_3$id_int-edu_sub_3$id_int+1*", rank),
-      newobj = "mat_ed_rank_3", 
-      datasources = opals[cohort]
-    )
-  })
-
-ds.assign(
-  toAssign = "edu_sub_3$id_int-edu_sub_3$id_int+1*99",
-  newobj = "mat_ed_rank_3", 
-  datasources = opals["moba"])
-
-ds.assign(
-  toAssign = "edu_sub_3$id_int-edu_sub_3$id_int+1*86.9",
-  newobj = "mat_ed_rank_3", 
-  datasources = opals["dnbc"])
-
-ds.rbind(
-  x = c("mat_ed_rank_1", "mat_ed_rank_2", "mat_ed_rank_3"), 
-    newobj = "mat_ed_rank")
-
-ds.cbind(
-  x = c("mat_ed_sub", "mat_ed_rank"), 
-  newobj = "mat_ed_sub"
-)
-
-dh.renameVars(
-  df = "mat_ed_sub", 
-  names = tibble(oldvar = "mat_ed_rank_1", newvar = "mat_ed_rank")
-)
-
-ds.assign(
-  toAssign = "mat_ed_sub$mat_ed_rank*mat_ed_sub$ext_age_", 
-  newobj = "mat_ed_age"
-)
-
-ds.cbind(
-  x = c("mat_ed_sub", "mat_ed_age"),
-  newobj = "mat_ed_sub"
-)
-
-ds.dataFrameSubset(
-  df.name = "mat_ed_sub", 
-  V1.name = "mat_ed_sub$sex", 
-  V2.name = "1", 
-  Boolean.operator = "==", 
-  newobj = "mat_ed_sub_m"
-)
-
-ds.dataFrameSubset(
-  df.name = "mat_ed_sub", 
-  V1.name = "mat_ed_sub$sex", 
-  V2.name = "2", 
-  Boolean.operator = "==", 
-  newobj = "mat_ed_sub_f"
-)
-
-datashield.workspace_save(opals, "created_sii_df")
 
 ################################################################################
 # 7. Create externalising subsets  
@@ -433,6 +280,9 @@ ds.dataFrameSubset(
   datasources = opals[cbcl_opals]
 )
 
-## ---- Save workspace ---------------------------------------------------------
+
+################################################################################
+# 8. Save final dataset  
+################################################################################
 datashield.workspace_save(opals, "traj_assigned_23_10_20")
 
