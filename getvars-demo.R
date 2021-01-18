@@ -21,7 +21,7 @@ library(stringr)
 library(ggplot2)
 
 library(remotes)
-install_github("lifecycle-project/ds-helper")
+install_github("sidohaakma/ds-helper", ref = "fix/do-not-use-opals-global-object")
 library(dsHelper)
 
 
@@ -77,7 +77,29 @@ cohorts_tables <- bind_rows(
     table = c(
       "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200513_1_Inequalities",
       "lc_isglobal_core_2_1.2_1_core_1_0_yearly_rep_200513_1_Inequalities",
-      "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities"))) %>%
+      "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities")), 
+  tibble(
+    opal_name = "sws",
+    table = c(
+      "",
+      "",
+      "")),
+  tibble(
+    opal_name = "elfe",
+    table = c(
+      "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200513_1_Inequalities",
+      "lc_isglobal_core_2_1.2_1_core_1_0_yearly_rep_200513_1_Inequalities",
+      "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities")),
+  tibble(
+    opal_name = "nfbc86",
+    table = c(
+      "",
+      "",
+      ""))
+  
+  
+  
+  ) %>%
   mutate(type = rep(c("nonrep", "yearrep", "mhrep"), 6))
 
 
@@ -107,6 +129,23 @@ dh.classDescrepancy("mhrep")
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(opals, "mhtraj_1")
 opals <- datashield.login(logindata, restore = "mhtraj_1")
+
+
+
+
+ds.colnames("nonrep", datasources = opals["raine"])
+
+old_new <- tibble(
+  oldvar = "child_id", 
+  newvar = "testtest"
+)
+
+dsHelper::dh.renameVars(
+  df = "nonrep" ,
+  names = old_new, 
+  conns = opals["raine"]
+)
+
 
 ################################################################################
 # 4. Derive maternal education variable
