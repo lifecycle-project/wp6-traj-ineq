@@ -6,6 +6,11 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
+library(magrittr)
+library(tidyr)
+library(dsHelper)
+library(dplyr)
+
 ################################################################################
 # 1. Load workspace  
 ################################################################################
@@ -26,11 +31,10 @@ conns <- datashield.login(logindata, restore = "mhtraj_7")
 ## To begin with I want to restrict to one instrument per construct. I'm a bit
 ## worried about what artefacts could be brought in by combing instruments.
 
-
 ## ---- Overall summary --------------------------------------------------------
 instruments <- dh.getStats(
   df = "mhrep", 
-  vars = c("ext_instr_", "int_instr_", "adhd_instr_"),
+  vars = c("ext_instr_", "int_instr_"),
   conns = conns)
 
 
@@ -38,16 +42,20 @@ instruments <- dh.getStats(
 mh_available <- instruments[[1]] %>%  mutate(
   instrument = case_when(
     category == 13 ~ "CBCL",
-    category == 47 ~ "SDQ", 
-    category == 61 ~ "YSR"))
+    category == 47 ~ "SDQ")
 
-ext_available <- mh_available %>% 
-  filter(variable == "ext_instr_" & value >0 & cohort != "combined")
+ext_cbcl_avail <- mh_available %>% 
+  filter(variable == "ext_instr_" & category == 13 & value >0 & cohort != "combined")
+
+ext_sdq_avail <- mh_available %>% 
+  filter(variable == "ext_instr_" & category == 47 & value >0 & cohort != "combined")
 
 int_available <- mh_available %>% 
-  filter(variable == "int_instr_" & value >0 & cohort != "combined")
+  filter(variable == "int_instr_" & category == 47 & value >0 & cohort != "combined")
 
-ext_coh <- ext_available %>% pull(cohort) %>% as.character %>% unique
+ext_cbcl_coh <- ext_cbcl_avail %>% pull(cohort) %>% as.character %>% unique
+ext_sdq_coh <- ext_sdq_avail %>% pull(cohort) %>% as.character %>% unique
+
 int_coh <- int_available %>% pull(cohort) %>% as.character %>% unique
 
 int_coh <- int_coh[which(int_coh != "dnbc")]

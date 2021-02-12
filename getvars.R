@@ -24,13 +24,14 @@ library(ggplot2)
 #install_github("lifecycle-project/ds-helper", ref = "maintenance")
 library(dsHelper)
 
-
+ls("package:dsBaseClient")
 ################################################################################
 # 2. Define variables and tables
 ################################################################################
 
 ## ---- Non-repeated -----------------------------------------------------------
-nonrep.vars <- c("child_id", "sex", "coh_country", "cohort_id")
+nonrep.vars <- c("child_id", "sex", "coh_country", "cohort_id", "eusilc_income", 
+                 "eusilc_income_quintiles")
 
 ## ---- Yearly repeated --------------------------------------------------------
 yearrep.vars <- c("child_id", "edu_m_", "age_years")
@@ -109,7 +110,7 @@ cohorts_tables <- bind_rows(
 # 2. Assign variables
 ################################################################################
 cohorts_tables %>%
-  filter(conn_name %in% c("chop", "moba", "raine", "dnbc", "inma", "elfe")) %>%
+  filter(conn_name %in% c("chop", "moba", "raine", "dnbc", "inma", "elfe", "sws")) %>%
   pwalk(function(conn_name, table, type){
     
     datashield.assign(
@@ -119,17 +120,22 @@ cohorts_tables %>%
       variables = eval(parse(text = paste0(type, ".vars"))))
   })
 
+
+## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_1")
 conns <- datashield.login(logindata, restore = "mhtraj_1")
 
 ################################################################################
 # 3. Sort out blank variables  
 ################################################################################
+ds.dataFrameFill("nonrep", "nonrep")
+#ds.dataFrameFill("yearrep", "yearrep")
 ds.dataFrameFill("mhrep", "mhrep")
 
+
+## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_2")
 conns <- datashield.login(logindata, restore = "mhtraj_2")
-
 
 ################################################################################
 # 4. Derive maternal education variable
@@ -188,7 +194,7 @@ rank <- mat_prop[[1]] %>%
   mutate(
     rank_val = case_when(
       category == 1 ~ valid_perc/2,
-      category == 2 ~ (valid_perc + lag(valid_perc, 1)) / 2,
+      category == 2 ~ (lag(valid_perc, 1) + (lag(valid_perc, 1) + valid_perc)) / 2,
       category == 3 ~ 100 - (valid_perc/2)),
     rank_val = rank_val / 100) %>%
   filter(cohort != "combined") %>%
@@ -220,12 +226,63 @@ ds.cbind(
   c("baseline_wide", "edu_rank_num"),
    newobj = "baseline_wide")
 
-ds.summary("baseline_wide$edu_rank_num")
-
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_4")
 conns <- datashield.login(logindata, restore = "mhtraj_4")
 
+################################################################################
+# 6. Create rank income variable  
+################################################################################
+
+## ---- Get proporstions -------------------------------------------------------
+income_prop <- dh.getStats(
+  df = "nonrep",
+  vars = "eusilc_income_quintiles",
+  conns = conns
+)
+
+## ---- Make tibble with values to assign --------------------------------------
+## not correct
+
+income_rank <- income_prop[[1]] %>%
+  mutate(
+    rank_val = case_when(
+      category == 1 ~ valid_perc/2,
+      category == 2 ~ (valid_perc + lag(valid_perc, 1)) / 2,
+      category == 3 ~ (valid_perc + lag(valid_perc, 1)) / 2,
+      category == 4 ~ (valid_perc + lag(valid_perc, 1)) / 2,
+      category == 5 ~ 100 - (valid_perc/2)),
+    rank_val = rank_val / 100) %>%
+  filter(cohort != "combined") %>%
+  group_by(cohort) %>%
+  select(cohort, rank_val) %>%
+  group_split %>%
+  map(function(x){
+    
+    mutate(x, rank_vec = paste(rank_val, collapse = ",")) %>%
+      head(1) %>%
+      select(-rank_val)
+  }) %>%
+  bind_rows %>%
+  mutate_at(vars(cohort), as.character) 
+
+## ---- Now recode education variable ------------------------------------------
+income_rank %>%
+  pmap(function(cohort, rank_vec){
+    ds.recodeLevels(
+      x = "nonrep$eusilc_income_quintiles", 
+      newCategories = unlist(str_split(rank_vec, ",")),
+      datasources = conns[cohort], 
+      newobj = "income_rank")
+  })
+
+ds.asNumeric("income_rank", newobj = "income_rank")
+
+ds.cbind(c("nonrep", "income_rank"), newobj = "nonrep")
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_5")
+conns <- datashield.login(logindata, restore = "mhtraj_5")
 
 ################################################################################
 # 6. Merge datasets  
@@ -251,23 +308,29 @@ ds.merge(
 )
 
 ## ---- Save progress ----------------------------------------------------------
-datashield.workspace_save(conns, "mhtraj_5")
-conns <- datashield.login(logindata, restore = "mhtraj_5")
+datashield.workspace_save(conns, "mhtraj_6")
+conns <- datashield.login(logindata, restore = "mhtraj_6")
 
 
 ################################################################################
-# 7. Create integer version of id variable  
+# 7. Create different versions of id variable  
 ################################################################################
+
+## ---- Integer ----------------------------------------------------------------
 ds.asInteger("analysis_df$child_id", "child_id_int")
 
+## ---- Factor -----------------------------------------------------------------
+#ds.asFactor("analysis_df$child_id", "child_id_fac")
+
+## ---- Merge back in ----------------------------------------------------------
 ds.dataFrame(
   x = c("analysis_df", "child_id_int"), 
   newobj = "analysis_df"
 )
 
 ## ---- Save progress ----------------------------------------------------------
-datashield.workspace_save(conns, "mhtraj_6")
-conns <- datashield.login(logindata, restore = "mhtraj_6")
+datashield.workspace_save(conns, "mhtraj_7")
+conns <- datashield.login(logindata, restore = "mhtraj_7")
 
 
 ################################################################################
@@ -281,10 +344,162 @@ dh.makeAgePolys(
   conns = conns
 )
 
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_8")
+conns <- datashield.login(logindata, restore = "mhtraj_8")
 
 ################################################################################
-# 10. Save progress  
+# 9. Describe instruments used   
 ################################################################################
-datashield.workspace_save(conns, "mhtraj_7")
-conns <- datashield.login(logindata, restore = "mhtraj_7")
+
+## As I'm going to work with the raw scores, I need to identify which cohorts
+## have what measure at how many time points
+
+## ---- Get descriptives -------------------------------------------------------
+instruments <- dh.getStats(
+  df = "mhrep", 
+  vars = c("ext_instr_", "int_instr_"),
+  conns = conns)
+
+mh_available <- instruments[[1]] %>%  mutate(
+  instrument = case_when(
+    category == 13 ~ "CBCL",
+    category == 47 ~ "SDQ"))
+  
+## ---- Create vectors of cohort names with these measures ---------------------  
+ext_cbcl_avail <- mh_available %>% 
+  filter(variable == "ext_instr_" & category == 13 & value >0 & cohort != "combined")
+  
+ext_sdq_avail <- mh_available %>% 
+  filter(variable == "ext_instr_" & category == 47 & value >0 & cohort != "combined")
+  
+int_cbcl_avail <- mh_available %>% 
+  filter(variable == "int_instr_" & category == 13 & value >0 & cohort != "combined")
+
+int_sdq_avail <- mh_available %>% 
+  filter(variable == "int_instr_" & category == 47 & value >0 & cohort != "combined")
+  
+ext_cbcl_tmp <- ext_cbcl_avail %>% pull(cohort) %>% as.character %>% unique
+ext_sdq_tmp <- ext_sdq_avail %>% pull(cohort) %>% as.character %>% unique
+int_cbcl_tmp <- int_cbcl_avail %>% pull(cohort) %>% as.character %>% unique  
+int_sdq_tmp <- int_sdq_avail %>% pull(cohort) %>% as.character %>% unique  
+
+
+################################################################################
+# 10. Create subsets
+################################################################################
+
+## Now we create subsets based on available instruments
+
+## ---- Externalising CBCL -----------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df", 
+  V1.name = "analysis_df$ext_instr_", 
+  V2.name = "13",
+  Boolean.operator = "==",
+  keep.NAs = FALSE,
+  newobj = "ext_cbcl_sub", 
+  datasources = conns[ext_cbcl_tmp]
+)
+
+## ---- Externalising SDQ ------------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df", 
+  V1.name = "analysis_df$ext_instr_", 
+  V2.name = "47",
+  Boolean.operator = "==",
+  keep.NAs = FALSE,
+  newobj = "ext_sdq_sub", 
+  datasources = conns[ext_sdq_tmp]
+)
+
+## ---- Internalising CBCL -----------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df", 
+  V1.name = "analysis_df$int_instr_", 
+  V2.name = "13",
+  Boolean.operator = "==",
+  keep.NAs = FALSE,
+  newobj = "int_cbcl_sub", 
+  datasources = conns[int_cbcl_tmp]
+)
+
+## ---- Internalising SDQ ------------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df", 
+  V1.name = "analysis_df$int_instr_", 
+  V2.name = "47",
+  Boolean.operator = "==",
+  keep.NAs = FALSE,
+  newobj = "int_sdq_sub", 
+  datasources = conns[int_sdq_tmp]
+)
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_9")
+conns <- datashield.login(logindata, restore = "mhtraj_9")
+
+
+################################################################################
+# 11. Visualise data  
+################################################################################
+
+## I think the only way to work out how many measurement occasions there are
+## currently is to look at the data. Once tapplyassign is fixed it should be 
+## possible to get summary data.
+
+## ---- Full dataset externalising ---------------------------------------------
+ds.scatterPlot(
+  x = "analysis_df$ext_age_", 
+  y = "analysis_df$ext_raw_", 
+  datasources = conns)
+
+## ---- Full dataset internalising ---------------------------------------------
+ds.scatterPlot(
+  x = "analysis_df$int_age_", 
+  y = "analysis_df$int_raw_", 
+  datasources = conns)
+
+## ---- Externalising CBCL -----------------------------------------------------
+ds.scatterPlot(
+  x = "ext_cbcl_sub$ext_age_", 
+  y = "ext_cbcl_sub$ext_raw_", 
+  datasources = conns[ext_cbcl_tmp])
+
+## ---- Externalising SDQ ------------------------------------------------------
+ds.scatterPlot(
+  x = "ext_sdq_sub$ext_age_", 
+  y = "ext_sdq_sub$ext_raw_", 
+  datasources = conns[ext_sdq_tmp])
+
+## ---- Internalising CBCL -----------------------------------------------------
+ds.scatterPlot(
+  x = "int_cbcl_sub$ext_age_", 
+  y = "int_cbcl_sub$ext_raw_", 
+  datasources = conns[int_cbcl_tmp])
+
+## ---- Internalising SDQ ------------------------------------------------------
+ds.scatterPlot(
+  x = "int_sdq_sub$int_age_", 
+  y = "int_sdq_sub$int_raw_", 
+  datasources = conns[int_sdq_tmp])
+
+################################################################################
+# 12. Define final cohort vectors  
+################################################################################
+
+## At the moment this has to be done manually based on inspecting the scatter 
+## plot
+
+ext_cbcl_coh <- c("moba", "raine")
+ext_sdq_coh <- "dnbc"
+int_cbcl_coh <- c("moba", "raine")
+int_sdq_coh <- "dnbc"
+
+
+################################################################################
+# 13. Save progress  
+################################################################################
+datashield.workspace_save(conns, "mhtraj_10")
+conns <- datashield.login(logindata, restore = "mhtraj_10")
 
