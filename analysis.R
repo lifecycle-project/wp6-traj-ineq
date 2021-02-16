@@ -17,6 +17,7 @@ library(stringr)
 library(magrittr)
 library(metafor)
 library(readr)
+library(ggplot2)
 
 ls("package:dsBaseClient")
 ################################################################################
@@ -602,7 +603,7 @@ ggsave(
 ggsave(
   filename="./figures/int_pc.png", 
   plot = int_pc.plot,
-  h = 25, w = 15.92, units="cm", dpi=1200,
+  h = 18, w = 25, units="cm", dpi=1200,
   device="png")
 
 
