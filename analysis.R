@@ -596,7 +596,7 @@ int_pc.plot <- ggplot() +
 ggsave(
   filename="./figures/ext_pc.png", 
   plot = ext_pc.plot,
-  h = 25, w = 15.92, units="cm", dpi=1200,
+  h = 18, w = 25, units="cm", dpi=1200,
   device="png")
 
 ggsave(
