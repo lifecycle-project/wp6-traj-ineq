@@ -607,8 +607,6 @@ ggsave(
   device="png")
 
 
-
-
 ################################################################################
 # 9. Repeat analyses stratified by sex  
 ################################################################################
@@ -638,6 +636,8 @@ ds.dataFrameSubset(
   keep.NAs = FALSE,
   newobj = "analysis_df_f")
 
+datashield.workspace_save(conns, "mhtraj_11")
+conns <- datashield.login(logindata, restore = "mhtraj_11")
 
 ################################################################################
 # Revised models 
@@ -799,9 +799,9 @@ ext_pc_f.pred <- ext_pc_ref_f %>%
       pred <- tibble(
         cohort = cohort,
         age = rep(agevec, 3),
-        age_f_1 = age^-1,
-        age_f_0_5 = age^-0.5,
-        sii = edu_rank_num + age_f_1*poly_1_ed + age_f_0_5*poly_2_ed
+        age_m_1 = age^-1,
+        age_m_0_5 = age^-0.5,
+        sii = edu_rank_num + age_m_1*poly_1_ed + age_m_0_5*poly_2_ed
       )
       
       return(pred)
@@ -855,9 +855,9 @@ int_pc_f.pred <- int_pc_ref_f %>%
       pred <- tibble(
         cohort = cohort,
         age = rep(agevec, 3),
-        age_f_2 = age^-2,
-        age_f_1 = age^-1,
-        sii = edu_rank_num + age_f_2*poly_1_ed + age_f_1*poly_2_ed
+        age_m_2 = age^-2,
+        age_m_1 = age^-1,
+        sii = edu_rank_num + age_m_2*poly_1_ed + age_m_1*poly_2_ed
       )
       
       return(pred)
@@ -868,28 +868,46 @@ int_pc_f.pred <- bind_rows(int_pc_f.pred) %>% mutate(sex = "female")
 
 
 ## ---- Combine male and female estimates --------------------------------------
-ext_pc_sex.pred <- bind_rows(ext_pc_m.pred, ext_pc_f.pred)
-int_pc_sex.pred <- bind_rows(int_pc_m.pred, int_pc_f.pred)
+ext_pc_sex.pred <- bind_rows(ext_pc_m.pred, ext_pc_f.pred) %>% 
+  mutate(outcome =  "Externalising")
 
+int_pc_sex.pred <- bind_rows(int_pc_m.pred, int_pc_f.pred) %>% 
+  mutate(outcome =  "Internalising")
+
+sex_pc <- bind_rows(ext_pc_sex.pred, int_pc_sex.pred) %>% 
+  select(cohort, age, sii, outcome, sex) %>%
+  filter(cohort == "combined") %>%
+  mutate(
+    cohort = case_when(cohort == "combined" ~ "Combined"), 
+    sex = case_when(sex == "male" ~ "Male", sex == "female" ~  "Female"), 
+    sex = factor(sex, levels = c("Male", "Female"), ordered = TRUE),
+    outcome =  factor(outcome, levels = c("Externalising", "Internalising"), 
+                      ordered = TRUE))
+  
 
 ################################################################################
 # Plot sex-stratified SII  
 ################################################################################
-
-## ---- Externalising ----------------------------------------------------------
-ggplot() + 
-  geom_line(data = ext_pc_sex.pred, aes(x = age, y = sii, colour = sex)) +
-  facet_wrap(~cohort, ncol = 1) +
+sex_pc.plot <- ggplot() + 
+  geom_line(data = sex_pc, aes(x = age, y = sii, colour = sex)) +
+  facet_wrap(~outcome, ncol = 1) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
-  scale_y_continuous(limit = c(-40, 40), breaks = seq(-40, 40, 20), expand = c(0, 0))
+  scale_y_continuous(limit = c(-40, 40), breaks = seq(-40, 40, 20), expand = c(0, 0)) +
+  theme_traj +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
+  geom_hline(yintercept = 20, alpha = 0.05) +
+  geom_hline(yintercept = -20, alpha = 0.05) +
+  scale_colour_manual(values = c("#325573", "#d74632"))
 
 
-## ---- Internalising ----------------------------------------------------------
-ggplot() + 
-  geom_line(data = int_pc_sex.pred, aes(x = age, y = sii, colour = sex)) +
-  facet_wrap(~cohort, ncol = 1) +
-  scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
-  scale_y_continuous(limit = c(-40, 40), breaks = seq(-40, 40, 20), expand = c(0, 0))
+## ---- Save plots --------------------------------------------------------------
+ggsave(
+  filename="./figures/sex_pc.png", 
+  plot = sex_pc.plot,
+  h = 18, w = 25, units="cm", dpi=1200,
+  device="png")
+
+
 
 
 
@@ -909,7 +927,157 @@ names(included_n) <- ext_pc_coh
 
 
 
+################################################################################
+# Get Ns for data description  
+################################################################################
 
+conns <- datashield.login(logindata, restore = "mhtraj_11")
+## ---- Externalising ----------------------------------------------------------
+
+## Can probably just use this for Ns as will be very similar to externalising
+
+ext_means_dnbc <- dsHelper::dh.makeOutcome(
+  df = "analysis_df", 
+  outcome = "ext_pc_", 
+  age_var = "ext_age_", 
+  bands = c(6, 7, 7, 10, 10, 15), 
+  mult_action = "earliest",
+  conns = conns["dnbc"]
+)
+
+datashield.workspace_save(conns, "mhtraj_12a")
+
+ext_means_moba <- dsHelper::dh.makeOutcome(
+  df = "analysis_df", 
+  outcome = "ext_pc_", 
+  age_var = "ext_age_", 
+  bands = c(0, 2, 2, 4, 4, 7), 
+  mult_action = "earliest",
+  conns = conns["moba"]
+)
+
+datashield.workspace_save(conns, "mhtraj_12b")
+
+ext_means_raine <- dsHelper::dh.makeOutcome(
+  df = "analysis_df", 
+  outcome = "ext_pc_", 
+  age_var = "ext_age_", 
+  bands = c(0, 5, 5, 7, 7, 10, 10, 12, 12, 15, 15, 18), 
+  mult_action = "earliest",
+  conns = conns["raine"]
+)
+
+datashield.workspace_save(conns, "mhtraj_12c")
+
+## ---- Internalising ----------------------------------------------------------
+#int_means_dnbc <- dsHelper::dh.makeOutcome(
+#  df = "analysis_df", 
+#  outcome = "int_pc_", 
+#  age_var = "int_age_", 
+#  bands = c(6, 7, 7, 10, 10, 15), 
+#  mult_action = "earliest",
+#  conns = conns["dnbc"]
+#)
+
+#datashield.workspace_save(conns, "mhtraj_12d")
+
+int_means_moba <- dsHelper::dh.makeOutcome(
+  df = "analysis_df", 
+  outcome = "int_pc_", 
+  age_var = "int_age_", 
+  bands = c(0, 2, 2, 4, 4, 7), 
+  mult_action = "earliest",
+  conns = conns["moba"]
+)
+
+datashield.workspace_save(conns, "mhtraj_12e")
+
+int_means_raine <- dsHelper::dh.makeOutcome(
+  df = "analysis_df", 
+  outcome = "int_pc_", 
+  age_var = "int_age_", 
+  bands = c(0, 5, 5, 7, 7, 10, 10, 12, 12, 15, 15, 18), 
+  mult_action = "earliest",
+  conns = conns["raine"]
+)
+
+datashield.workspace_save(conns, "mhtraj_12f")
+conns <- datashield.login(logindata, restore = "mhtraj_12f")
+
+## ---- Make into tibble for plotting ------------------------------------------
+ref <- tibble(
+  cohort = c("moba", "dnbc", "raine", "moba", "raine"),
+  table = c(rep("ext_pc__derived", 3), rep("int_pc__derived", 2))
+)
+
+ns_tmp <- ref %>%
+  pmap(function(cohort, table){
+    
+    dh.getStats(
+      df = table, 
+      vars = ds.colnames(table, datasources = conns[cohort])[[1]],
+      conns = conns[cohort])
+    
+  })
+  
+  
+ext_a <- dh.getStats(
+  df = "ext_pc__derived", 
+  vars = ds.colnames("ext_pc__derived", datasources = conns["dnbc"])[[1]],
+  conns = conns["dnbc"])
+              
+  
+  
+  ()
+
+int_pc__derived
+
+derived_dnbc <- str_detect(ds.ls(datasources = conns["dnbc"]), "derived")
+
+
+
+
+test <- descriptives_ss$continuous %>%
+  filter(variable %in% c("bmi.730", "bmi.1461", "bmi.2922", "bmi.5113", 
+                         "bmi.6544", "age_months.24", "age_months.48", "age_months.96", 
+                         "age_months.168", "age_months.215")) 
+
+testy <- test %>% 
+  separate(variable, c("var", "age"), sep = "([.])") %>% print(n = 90) %>%
+  filter(var == "age_months") %>%
+  mutate(
+    cohort = case_when(
+      cohort == "chop" ~ "CHOP",
+      cohort == "dnbc" ~ "DNBC",
+      cohort == "gecko" ~ "GECKO",
+      cohort == "genr" ~ "Gen-R", 
+      cohort == "inma" ~ "INMA", 
+      cohort == "moba" ~ "MoBa", 
+      cohort == "ninfea" ~ "NINFEA",
+      cohort == "raine" ~ "Raine",
+      cohort == "Combined" ~ "Combined"), 
+    cohort = factor(cohort, levels = rev(cohort_neat), ordered = TRUE))
+
+sample.plot <- ggplot(data = testy, aes(x = perc_50, y = cohort, size = valid_n, colour = cohort)) +
+  geom_point() + 
+  geom_vline(xintercept = 0, linetype=2, size = 0.3) +
+  geom_vline(xintercept = 24, linetype=2, size = 0.3) +
+  geom_vline(xintercept = 48, linetype=2, size = 0.3) + 
+  geom_vline(xintercept = 96, linetype=2, size = 0.3) + 
+  geom_vline(xintercept = 168, linetype=2, size = 0.3) +
+  geom_vline(xintercept = 215, linetype=2, size = 0.3) +
+  xlab("Child age (months)") +
+  ylab("Cohort") +
+  forest_theme + 
+  theme(panel.grid.major.x = element_line(colour="white"),
+        panel.grid.minor.x =element_line(colour="white"),
+        axis.ticks.x = element_line(colour = "grey"), 
+        legend.position = "top") +
+  scale_x_continuous(
+    limits = c(0, 215), 
+    breaks = c(0, 24, 48, 96, 168, 215), 
+    expand = c(0.01, 0)) +
+  scale_colour_manual(values = palette_n)
 
 
 ## ---- Externalising ----------------------------------------------------------
@@ -970,6 +1138,23 @@ int_form_raw <- dh.makeLmerForm(
   fixed = "edu_rank_num",
   age_interactions = "edu_rank_num"
 )  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
