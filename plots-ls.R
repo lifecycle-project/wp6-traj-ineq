@@ -11,6 +11,39 @@ library(dsHelper)
 library(dplyr)
 library(ggplot2)
 
+
+################################################################################
+# 1. Theme for plot
+################################################################################
+## ---- Theme ------------------------------------------------------------------
+theme_traj <- theme(
+  plot.background = element_rect(fill =scales::alpha("#CCCCCC", 0.3)),  #Background outside of plot
+  panel.background = element_rect(fill="white"),  #Background for plot
+  panel.grid.major=element_line(colour="grey"), #Major and minor gridlines
+  panel.grid.minor=element_line(colour="white"), 
+  panel.spacing = unit(1, "lines"),
+  plot.title = element_text(hjust = 0.5, vjust=0, size=16, face="bold"), #Plot title, thought don't tend to use
+  text=element_text(size=9), #General text 
+  axis.title.y = element_text(size=14, margin = margin(t = 0, r = 10, b = 0, l = 0)), #Axis labels
+  axis.title.x = element_text(size=14, margin = margin(t = 10, r = 0, b = 0, l = 0)),
+  axis.text.x = element_text(size=11, margin = margin(t = 4, r=0, b=0, l=0), colour="black"), #Axis text
+  axis.text.y = element_text(size=11, margin = margin(t = 0, r=4, b=0, l=0), colour="black"),
+  axis.ticks.length=unit(0.3, "cm"),
+  axis.ticks = element_line(colour = "grey"),
+  strip.text.x = element_text(size=11),
+  strip.background = element_blank(),
+  legend.background= element_rect(fill=scales::alpha("#CCCCCC", 0.03)), #Legend background colour
+  legend.title=element_text(size=8, face="bold"), #Legend title
+  legend.text=element_text(size=8), #Legend text
+  legend.position="right", #Legend position
+  legend.direction="vertical", #Legend stacking
+  legend.justification = "left", #Left justify legend
+  legend.key.width = unit(3, "line"), #Make amount of line displayed in legend longer
+  legend.margin=margin(t=0.2, r=0, b=0.2, l=0, unit="cm"), #Margin around legend
+  plot.margin = unit(c(0.5, 0.5, 0.2, 0.5),"cm"),
+  panel.grid.minor.y=element_blank(),
+  panel.grid.major.y=element_blank())
+
 ################################################################################
 # 2. Numbers for each cohort  
 ################################################################################
@@ -28,14 +61,26 @@ names(included_n) <- ext_pc_coh_lin
 ################################################################################
 # 1. Maternal education distributions 
 ################################################################################
+mat_ed.tab <- mat_ed_stats$categorical %>%
+mutate(
+  cohort = case_when(
+    cohort == "chop" ~ "CHOP",
+    cohort == "dnbc" ~ "DNBC",
+    cohort == "inma" ~ "INMA",
+    cohort == "moba" ~ "MoBa", 
+    cohort == "raine" ~ "Raine")) %>%
+  filter(cohort != "combined") 
 
 ## ---- Plot -------------------------------------------------------------------
-mat.plot <- mat_ed_stats$categorical %>%
-  filter(cohort != "combined") %>%
+mat.plot <- mat_ed.tab %>%
   ggplot(aes(x = category, y = valid_perc, colour = cohort)) +
   geom_bar(stat = "identity") +
   facet_wrap(~cohort, ncol = 5) +
-  theme_traj
+  theme_traj +
+  xlab("Maternal education category (1 = high)") +
+  ylab("Percent") +
+  theme(legend.position = "none")
+  
 
 ## ---- Save plot --------------------------------------------------------------
 ggsave(
@@ -159,9 +204,9 @@ ext_lin.plot <- ggplot() +
 
 ## ---- Plot internalising model -----------------------------------------------
 int_lin.plot <- ggplot() + 
-  geom_line(data = int_lin_pred_coh, aes(x = age, y = sii, colour = cohort)) +
-  geom_ribbon(data = int_lin_pred_coh, aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
-  facet_wrap(~cohort, ncol = 1) +
+  geom_line(data = int_lin_plot.pred, aes(x = age, y = sii, colour = cohort)) +
+  geom_ribbon(data = int_lin_plot.pred, aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
+  facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
   scale_y_continuous(limit = c(-20, 40), breaks = seq(-20, 40, 20), expand = c(0, 0)) +
   theme_traj +
@@ -175,13 +220,13 @@ int_lin.plot <- ggplot() +
 ggsave(
   filename="./figures/ext_lin.png", 
   plot = ext_lin.plot,
-  h = 12, w = 25, units="cm", dpi=1000,
+  h = 12, w = 20, units="cm", dpi=1000,
   device="png")
 
 ggsave(
   filename="./figures/int_lin.png", 
   plot = int_lin.plot,
-  h = 12, w = 25, units="cm", dpi=1200,
+  h = 12, w = 20, units="cm", dpi=1200,
   device="png")
 
 ################################################################################
@@ -217,7 +262,7 @@ int_nl_plot.pred %<>%
 ext_nl.plot <- ggplot() + 
   geom_line(data = ext_nl_plot.pred, aes(x = age, y = sii, colour = cohort)) +
   geom_ribbon(data = ext_nl_plot.pred,  aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
-  facet_wrap(~cohort, ncol = 1) +
+  facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
   scale_y_continuous(limit = c(-20, 40), breaks = seq(-20, 40, 20), expand = c(0, 0)) +
   theme_traj +
@@ -232,7 +277,7 @@ ext_nl.plot <- ggplot() +
 int_nl.plot <- ggplot() + 
   geom_line(data = int_nl_plot.pred, aes(x = age, y = sii, colour = cohort)) +
   geom_ribbon(data = int_nl_plot.pred,  aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
-  facet_wrap(~cohort, ncol = 1) +
+  facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
   scale_y_continuous(limit = c(-20, 40), breaks = seq(-20, 40, 20), expand = c(0, 0)) +
   theme_traj +
@@ -246,13 +291,13 @@ int_nl.plot <- ggplot() +
 ggsave(
   filename="./figures/ext_nl.png", 
   plot = ext_nl.plot,
-  h = 12, w = 25, units="cm", dpi=1200,
+  h = 12, w = 20, units="cm", dpi=1200,
   device="png")
 
 ggsave(
   filename="./figures/int_nl.png", 
   plot = int_nl.plot,
-  h = 12, w = 25, units="cm", dpi=1200,
+  h = 12, w = 20, units="cm", dpi=1200,
   device="png")
 
 
