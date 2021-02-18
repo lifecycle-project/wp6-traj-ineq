@@ -367,6 +367,12 @@ mh_available <- instruments[[1]] %>%  mutate(
     category == 47 ~ "SDQ"))
   
 ## ---- Create vectors of cohort names with these measures ---------------------  
+ext_pc_avail = mh_available %>% 
+  filter(variable == "ext_instr_" & value >0 & cohort != "combined")
+
+int_pc_avail = mh_available %>% 
+  filter(variable == "int_instr_" & value >0 & cohort != "combined")
+
 ext_cbcl_avail <- mh_available %>% 
   filter(variable == "ext_instr_" & category == 13 & value >0 & cohort != "combined")
   
@@ -384,6 +390,8 @@ ext_sdq_tmp <- ext_sdq_avail %>% pull(cohort) %>% as.character %>% unique
 int_cbcl_tmp <- int_cbcl_avail %>% pull(cohort) %>% as.character %>% unique  
 int_sdq_tmp <- int_sdq_avail %>% pull(cohort) %>% as.character %>% unique  
 
+ext_pc_coh_lin <- c("chop", "dnbc", "inma", "moba", "raine")
+int_pc_coh_lin <- c("chop", "inma", "moba", "raine")
 
 ################################################################################
 # 10. Create subsets
@@ -451,13 +459,13 @@ conns <- datashield.login(logindata, restore = "mhtraj_9")
 ## ---- Full dataset externalising ---------------------------------------------
 ds.scatterPlot(
   x = "analysis_df$ext_age_", 
-  y = "analysis_df$ext_raw_", 
+  y = "analysis_df$ext_pc_", 
   datasources = conns)
 
 ## ---- Full dataset internalising ---------------------------------------------
 ds.scatterPlot(
   x = "analysis_df$int_age_", 
-  y = "analysis_df$int_raw_", 
+  y = "analysis_df$int_pc_", 
   datasources = conns)
 
 ## ---- Externalising CBCL -----------------------------------------------------

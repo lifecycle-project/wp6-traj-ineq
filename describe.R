@@ -85,7 +85,8 @@ int_coh_nl <- int_coh[which(int_coh != "elfe")]
 ################################################################################
 
 ## ---- Scatter plots ----------------------------------------------------------
-ds.scatterPlot(x = "analysis_df$ext_age", y = "analysis_df$ext_pc_")
+ds.scatterPlot(x = "analysis_df$ext_age_", y = "analysis_df$ext_pc_", 
+               datasources = conns["dnbc"])
 
 
 ## ---- Externalising education factor -----------------------------------------
