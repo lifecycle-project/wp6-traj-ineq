@@ -12,6 +12,20 @@ library(dplyr)
 library(ggplot2)
 
 ################################################################################
+# 2. Numbers for each cohort  
+################################################################################
+## ---- Cohort numbers ---------------------------------------------------------
+included_n <- paste0("study", c(1:5)) %>%
+  map(function(x){
+    
+    ext_lin.fit$output.summary[[x]]$ngrps    
+    
+  })
+
+names(included_n) <- ext_pc_coh_lin
+
+
+################################################################################
 # 1. Maternal education distributions 
 ################################################################################
 
@@ -20,13 +34,14 @@ mat.plot <- mat_ed_stats$categorical %>%
   filter(cohort != "combined") %>%
   ggplot(aes(x = category, y = valid_perc, colour = cohort)) +
   geom_bar(stat = "identity") +
-  facet_wrap(~cohort, ncol = 5)
+  facet_wrap(~cohort, ncol = 5) +
+  theme_traj
 
 ## ---- Save plot --------------------------------------------------------------
 ggsave(
   filename="./figures/mat_dist.png", 
   plot = mat.plot,
-  h = 15, w = 20, units="cm", dpi=1200,
+  h = 12, w = 20, units="cm", dpi=1200,
   device="png")
 
 
@@ -92,7 +107,7 @@ n.plot <- ggplot(data = ns, aes(x = mean, y = cohort, size = N, colour = cohort)
 ggsave(
   filename="./figures/sample_n.png", 
   plot = n.plot,
-  h = 18, w = 25, units="cm", dpi=1200,
+  h = 12, w = 30, units="cm", dpi=1200,
   device="png")
 
 ################################################################################
@@ -132,7 +147,7 @@ int_lin_plot.pred %<>%
 ext_lin.plot <- ggplot() + 
   geom_line(data = ext_lin_plot.pred, aes(x = age, y = sii, colour = cohort)) +
   geom_ribbon(data = ext_lin_plot.pred, aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
-  facet_wrap(~cohort, ncol = 1) +
+  facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
   scale_y_continuous(limit = c(-20, 40), breaks = seq(-20, 40, 20), expand = c(0, 0)) +
   theme_traj +
@@ -160,13 +175,13 @@ int_lin.plot <- ggplot() +
 ggsave(
   filename="./figures/ext_lin.png", 
   plot = ext_lin.plot,
-  h = 18, w = 25, units="cm", dpi=1200,
+  h = 12, w = 25, units="cm", dpi=1000,
   device="png")
 
 ggsave(
   filename="./figures/int_lin.png", 
   plot = int_lin.plot,
-  h = 18, w = 25, units="cm", dpi=1200,
+  h = 12, w = 25, units="cm", dpi=1200,
   device="png")
 
 ################################################################################
@@ -231,13 +246,13 @@ int_nl.plot <- ggplot() +
 ggsave(
   filename="./figures/ext_nl.png", 
   plot = ext_nl.plot,
-  h = 18, w = 25, units="cm", dpi=1200,
+  h = 12, w = 25, units="cm", dpi=1200,
   device="png")
 
 ggsave(
   filename="./figures/int_nl.png", 
   plot = int_nl.plot,
-  h = 18, w = 25, units="cm", dpi=1200,
+  h = 12, w = 25, units="cm", dpi=1200,
   device="png")
 
 
