@@ -3,3 +3,12 @@
 .RData
 .Ruserdata
 login.R
+daa/
+figures/
+literature/
+manuscript/
+plan/
+presentations/
+tables/
+.sublime-project
+.sublime-workspace
