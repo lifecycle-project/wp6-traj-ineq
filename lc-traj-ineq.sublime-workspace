@@ -1,0 +1,695 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"invent",
+				"inventory_cohort"
+			],
+			[
+				"inven",
+				"inventory_cohort"
+			],
+			[
+				"parent",
+				"parent_comb"
+			],
+			[
+				"cont",
+				"cont_early"
+			],
+			[
+				"par",
+				"parent_comb.data"
+			],
+			[
+				"ear",
+				"earlyfact.data"
+			],
+			[
+				"vars",
+				"vars_in"
+			],
+			[
+				"long",
+				"longtable"
+			],
+			[
+				"book",
+				"booktabs"
+			],
+			[
+				"tpf",
+				"tpf_young_2.fit"
+			],
+			[
+				"tpd",
+				"tpf_ord.data"
+			],
+			[
+				"tpf_",
+				"tpf_ord.data"
+			],
+			[
+				"tp",
+				"tpf_ord.data"
+			],
+			[
+				"disc",
+				"discipline_kw"
+			],
+			[
+				"tpf_yo",
+				"tpf_young.vars"
+			],
+			[
+				"kw",
+				"kw4010"
+			],
+			[
+				"strip",
+				"stripcol"
+			],
+			[
+				"st",
+				"stripe_color"
+			],
+			[
+				"data",
+				"datasub"
+			],
+			[
+				"useful",
+				"useful-code-r"
+			],
+			[
+				"acce",
+				"acceptance_y.mod"
+			],
+			[
+				"fac_",
+				"fac_yng.vars"
+			],
+			[
+				"fac",
+				"fac_yng.vars"
+			],
+			[
+				"mfq_",
+				"mfq_adj_plot"
+			],
+			[
+				"kable",
+				"kable_styling"
+			],
+			[
+				"semh_",
+				"semh_linked.data"
+			],
+			[
+				"connect",
+				"connect_14.vars"
+			],
+			[
+				"pp",
+				"ppfu_long.data"
+			],
+			[
+				"ppfu",
+				"ppfu_long.data"
+			],
+			[
+				"ppfu_",
+				"ppfu_long.data"
+			],
+			[
+				"fact",
+				"factor_key"
+			],
+			[
+				"mat_pers_bin",
+				"mat_pers_bin_num"
+			],
+			[
+				"mat_pers",
+				"mat_pers.data"
+			],
+			[
+				"exp",
+				"exponentiate"
+			],
+			[
+				"mat_",
+				"mat_finprob_early"
+			],
+			[
+				"mat",
+				"mat_moderators"
+			],
+			[
+				"mat_f",
+				"mat_finprob_late"
+			],
+			[
+				"mat_p",
+				"mat_pers_symp"
+			],
+			[
+				"latex",
+				"latex_options"
+			],
+			[
+				"col",
+				"col_fact_names"
+			],
+			[
+				"col_",
+				"col_var_names"
+			],
+			[
+				"dec",
+				"decreasing = \tArguments"
+			],
+			[
+				"full",
+				"full_width = \tArguments"
+			],
+			[
+				"para",
+				"parameterestimates\t{lavaan}"
+			],
+			[
+				"school",
+				"school-enjoyment-mh"
+			],
+			[
+				"sec",
+				"sec15.fit"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Snippet: ",
+				"Snippet: kable_extra"
+			],
+			[
+				"lintr",
+				"LSP: Disable Language Server in Project"
+			],
+			[
+				"rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"lan",
+				"LSP: Setup Language Server"
+			],
+			[
+				"r-ide",
+				"Preferences: R-IDE Settings"
+			],
+			[
+				"lsp",
+				"LSP: Enable Language Server Globally"
+			],
+			[
+				"r-",
+				"Preferences: R-IDE Settings"
+			],
+			[
+				"re",
+				"Package Control: Remove Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"rbos",
+				"R-Box: Format Selected Code"
+			],
+			[
+				"send",
+				"Preferences: SendCode Settings"
+			],
+			[
+				"sen",
+				"SendCode: Choose Program"
+			],
+			[
+				"ter",
+				"Terminus: Open Default Shell in View"
+			],
+			[
+				"term",
+				"Terminus: Open Default Shell in View"
+			],
+			[
+				"termin",
+				"Terminus: Open Default Shell in View"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 157.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/timca/OneDrive - University of Bristol/repos/lc-trajectories-inequality",
+		"/C/Users/timca/OneDrive - University of Bristol/repos/lc-trajectories-inequality/code"
+	],
+	"file_history":
+	[
+		"/Users/timcadman/OneDrive - University of Bristol/repos/ineq_clone/alspac-analysis.R",
+		"/O/repos/lc-trajectories-inequality/data/Inventory for inequalities paper.csv",
+		"/O/repos/lc-trajectories-inequality/code/lc-traj-ineq-analysis-plan-v1.rmd",
+		"/O/repos/useful-code-r/code/reports/report-colours.doc",
+		"/C/Users/tc18889/Downloads/citations-20190502T100219.bibtex",
+		"/O/repos/lc-trajectories-inequality/reports/lc-traj-ineq-convert.bat",
+		"/O/repos/lc-trajectories-inequality/code/lc-traj-ineq-ref.bib",
+		"/O/repos/useful-code-r/code/reports/khl_4.tex",
+		"/C/Users/tc18889/Downloads/measures-of-health-inequalities_-part-2.bib",
+		"/C/Users/tc18889/Downloads/027795369190212U.bib",
+		"/C/Users/tc18889/Downloads/indicators-of-socioeconomic-position-(part-1).bib",
+		"/C/Users/tc18889/Downloads/the-role-of-prenatal,-perinatal-and-postnatal-factors-in-the-explanation-of-socioeconomic-inequalities-in-preschool-asthma-symptoms_-the-generation-r-study.bib",
+		"/O/repos/teen-parenting/code/tpf_report-24_04_19.rmd",
+		"/O/repos/useful-code-r/code/useful-code-r-packages.r",
+		"/O/repos/parent-personality-sep/code/ppsep-analysis-lr.R",
+		"/O/repos/teen-parenting/code/tpf-source-yng.R",
+		"/O/repos/teen-parenting/code/tpf-analysis-yng.r",
+		"/O/repos/useful-code-r/code/functions/lav-tab-par.R",
+		"/O/repos/teen-parenting/code/tpf-source.R",
+		"/O/repos/teen-parenting/code/tpf-analysis-meth.r",
+		"/O/Will ASC IRT/Mplus analyses with Hein/females_for_CFA.inp",
+		"/O/Will ASC IRT/Mplus analyses with Hein/split1_for_CFA.inp",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/yaml.sublime-snippet",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/kable_extra.sublime-snippet",
+		"/O/repos/teen-parenting/code/tpf-report-10_04_19.rmd",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/kable.sublime-snippet",
+		"/O/repos/school-enjoyment-mh/reports/semh-analysis-xl-report.tex",
+		"/C/Program Files/R/R-3.5.3/etc/Rprofile.site",
+		"/C/repos/useful-code-r/code/reports/khl_3.tex",
+		"/C/repos/life-cycle/wp3/code/alspac_missing_02_04_19.Rmd",
+		"/C/repos/life-cycle/wp3/code/wp3-constanza_04.03.19.rmd",
+		"/C/repos/school-enjoyment-mh/code/semh-analysis-xl.R",
+		"/C/repos/school-enjoyment-mh/code/semh-analysis-xl-report.Rmd",
+		"/C/repos/useful-code-r/code/useful-code-r-render.r",
+		"/C/repos/life-cycle/wp3/code/wp3-constanza_04.03.19.r",
+		"/C/repos/parent-personality-sep/code/ppsep-source-impute.R",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-lr.do",
+		"/C/repos/life-cycle/wp1/code/wp1-harmonisation.r",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/varlist.sublime-snippet",
+		"/C/repos/teen-parenting/code/tpf-source.R",
+		"/C/repos/school-enjoyment-mh/code/semh-source.r",
+		"/C/repos/gosh-asc-sex/code/gosh-asc-sex-missing.rmd",
+		"/C/repos/useful-code-r/code/functions/match-lab.R",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/yaml.sublime-snipped",
+		"/C/repos/useful-code-r/code/functions/create-mod.r",
+		"/C/repos/useful-code-r/code/functions/simpMedPlot.R",
+		"/C/repos/school-enjoyment-mh/code/sdq_outtakes.rmd",
+		"/C/repos/school-enjoyment-mh/code/semh-plots-sem.r",
+		"/C/repos/useful-code-r/code/functions/lavSigCoef.R",
+		"/C/repos/school-enjoyment-mh/code/semh-source-linked.R",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-child-mh.R",
+		"/C/repos/useful-code-r/code/functions/titleN.r",
+		"/C/repos/useful-code-r/code/functions/lavNobs.r",
+		"/C/repos/useful-code-r/code/themes/useful-code-r-ggtheme-khl.R",
+		"/C/repos/stats-learning/reports/test_29_03_19.rmd",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/rmd_2_tab.sublime-snippet",
+		"/C/repos/useful-code-r/code/themes/addFonts.r",
+		"/C/repos/useful-code-r/code/functions/getNodes.R",
+		"/C/repos/useful-code-r/code/functions/lav-tab-struc.r",
+		"/C/repos/useful-code-r/code/reports/to do",
+		"/C/repos/useful-code-r/code/functions/sigStars.r",
+		"/C/repos/useful-code-r/code/functions/lavaanPlotMod.R",
+		"/C/repos/life-cycle/wp1/code/wp1-docs-child.rmd",
+		"/C/repos/parent-personality-sep/code/ppsep-plots.R",
+		"/C/Users/tc18889/AppData/Roaming/Sublime Text 3/Packages/User/r-header-1.sublime-snippet",
+		"/C/Program Files/R/R-3.5.2/etc/Rprofile.site",
+		"/C/repos/lc-trajectories-inequality/code/lc-traj-ineq-plan.rmd",
+		"/C/repos/useful-code-r/code/useful-code-r-packages.r",
+		"/C/repos/useful-code-r/code/reports/report-design.rmd",
+		"/C/repos/useful-code-r/code/functions/ggsem.R",
+		"/C/repos/life-cycle/wp6/code/wp6-harmonisation.R",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-mlm.R",
+		"/D/practicals/Some practicals using R/practical 3 in R.R",
+		"/C/repos/teen-parenting/code/tpf-analysis.r",
+		"/C/repos/useful-code-r/code/reports/khl.tex",
+		"/C/Users/tc18889/OneDrive - University of Bristol/MyFiles-Migrated/Documents/R/win-library/3.5/rmarkdown/rmd/latex/default-1.17.0.2.tex",
+		"/C/repos/school-enjoyment-mh/code/semh-report-sem-pdf.rmd",
+		"/C/repos/useful-code-r/code/reports/report-design.pdf",
+		"/C/Users/tc18889/AppData/Local/Microsoft/Windows/INetCache/Content.Outlook/WK6HCOV2/Child phenotypes.do",
+		"/C/repos/cog-med/code/cog-med-analysis-sem.r",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-mat-epds.R",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-child-cov.R",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-mat-cov.r",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-mlm.do",
+		"/C/repos/school-enjoyment-mh/code/semh-report-sem-pdf-test.rmd",
+		"/C/repos/stats-learning/code/practice md.rmd",
+		"/C/repos/useful-code-r/code/reports/custom.tex",
+		"/C/repos/useful-code-r/code/reports/mystyles.sty",
+		"/C/repos/useful-code-r/code/reports/report-design.bbl",
+		"/C/repos/useful-code-r/code/mystyles.sty",
+		"/C/repos/stats-learning/code/practice rmd 2.rmd",
+		"/C/Old files/Practice MLM.do",
+		"/C/repos/school-enjoyment-mh/code/semh-analysis-sem.r",
+		"/C/repos/school-enjoyment-mh/code/semh-plan-dataviz.r",
+		"/C/Old files/Active projects/Parent personalities/running mlm models in r.r",
+		"/C/Old files/Active projects/Parent personalities/mlm r syntax.R",
+		"/C/repos/parent-personality-sep/code/ppsep-source-getvars.R",
+		"/C/Old files/Active projects/Parent personalities/Alex results/Mat_pers_long.dta",
+		"/C/Old files/Active projects/Parent personalities/Alex results/Analysis_3.do",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-lr.R",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-descriptives.do",
+		"/C/repos/parent-personality-sep/code/ppsep-analysis-descriptives.R",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-mat-personality.R",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-pat-personality.R",
+		"/C/repos/checking covariates getvars.do",
+		"/C/repos/check personality.do",
+		"/C/repos/useful-code-stata/code/useful-code-stata-personality.do",
+		"/C/repos/useful-code-r/code/functions/lrTabImp.R",
+		"/C/repos/useful-code-r/code/functions/proRate.r",
+		"/C/repos/r stata discrepancies.txt",
+		"/C/repos/useful-code-r/code/functions/lrTab.R",
+		"/C/repos/useful-code-r/code/functions/nPerc.r",
+		"/C/repos/useful-code-r/code/derived/useful-code-r-derived-pat-cov.R",
+		"/C/repos/useful-code-r/code/functions/tTab.R",
+		"/C/repos/parent-personality-sep/code/ppsep-source-impute.do",
+		"/C/repos/parent-personality-sep/code/ppsep-source-getvars.do",
+		"/C/repos/useful-code-stata/code/useful-code-stata-childMH.do",
+		"/R/Data/Syntax/syntax_template_11Mar19.do",
+		"/C/repos/alspac function discrepancies 13.03.19.do",
+		"/C/repos/useful-code-stata/code/useful-code-stata-covariates.do",
+		"/C/repos/teen-parenting/code/tpf-report-efa.rmd",
+		"/C/repos/tim_alspac_r_13.03.19.Rmd",
+		"/C/repos/school-enjoyment-mh/code/semh-report-cfa12.rmd",
+		"/C/repos/child_completed_WoC.do",
+		"/C/repos/useful-code-stata/code/useful-code-stata-epds.do",
+		"/C/repos/useful-code-r/code/functions/stataQuant.R",
+		"/C/Old files/Active projects/Parent personalities/ppfu_derived variables.do",
+		"/C/Old files/create_maternal_depression.do"
+	],
+	"find":
+	{
+		"height": 28.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"social science",
+			"social science#",
+			"social science",
+			"math",
+			"setmathfont",
+			"enumerate",
+			"\"",
+			"ff4510",
+			"ff4511",
+			"ff4512",
+			"\"",
+			"   ",
+			"\"",
+			"\" \"",
+			"tpf_noimp.data",
+			"intent",
+			"f_soc90_m",
+			"sdq_11.vars <- c(\"KW6504\", \"KW6506\", \"KW6511\", \"KW6517\", \"KW6521\", \"KW6501\",\n                 \"KW6509\", \"KW6514\", \"KW6520\", \"KW6524\")",
+			"getNodes",
+			"get_nodes",
+			"float",
+			"sectionfont",
+			"marrs",
+			"maketitle",
+			"tocdepth",
+			"\\contentsname",
+			"arial",
+			"rule",
+			"author",
+			"pdftitle",
+			"date",
+			"author",
+			"date",
+			"author",
+			"maternal",
+			"maternal de",
+			"mfq",
+			"ccj145",
+			"sdq",
+			"kw6603b2",
+			"sdq",
+			"ks4_ptscnewe",
+			"ks4",
+			"npd",
+			"education",
+			"gcs",
+			"achiev",
+			"academic",
+			"para",
+			"begin",
+			"body",
+			"ragged",
+			"font",
+			"fontspec",
+			"fontfamile",
+			"xcolo",
+			"biblatex",
+			"chem-acs",
+			"chem-acs.dbx",
+			",",
+			"\"",
+			"\", \"",
+			"table(mat_pers.data$mat_pers_bin)",
+			"Hmisc::describe(factor(imp.data$mat_finprob_early_num))\nHmisc::describe(factor(imp.comb$mat_finprob_early_num))",
+			"Hmisc::describe(data$pb184)",
+			"chi_mh.varlist <- subset(current, name %in% c(\"ta5020\", \"ta5021\", \"ta5022\", \n                  \"ta5023\", \"ta5024\", \"ta5025\", \"ta5026\", \"ta5027\", \"ta5028\", \n                  \"ta5029\", \"ta5030\", \"ta5031\", \"ta5032\", \"tc4030\", \"tc4031\", \n                  \"tc4032\", \"tc4033\", \"tc4034\", \"tc4035\", \"tc4036\", \"tc4037\", \n                  \"tc4038\", \"tc4039\", \"tc4040\", \"tc4041\", \"tc4042\", \"fddp110\", \n                  \"fddp112\", \"fddp113\", \"fddp114\", \"fddp115\", \"fddp116\", \n                  \"fddp118\", \"fddp119\", \"fddp121\", \"fddp122\", \"fddp123\", \n                  \"fddp124\", \"fddp125\", \"ff6500\", \"ff6502\", \"ff6503\", \"ff6504\", \n                  \"ff6505\", \"ff6506\", \"ff6508\", \"ff6509\", \"ff6511\", \"ff6512\", \n                  \"ff6513\", \"ff6514\", \"ff6515\", \"fg7210\", \"fg7212\", \"fg7213\", \n                  \"fg7214\", \"fg7215\", \"fg7216\", \"fg7218\", \"fg7219\", \"fg7221\", \n                  \"fg7222\", \"fg7223\", \"fg7224\", \"fg7225\", \"ccs4500\", \"ccs4502\", \n                  \"ccs4503\", \"ccs4504\", \"ccs4505\", \"ccs4506\", \"ccs4508\", \"ccs4509\", \n                  \"ccs4511\", \"ccs4512\", \"ccs4513\", \"ccs4514\", \"ccs4515\", \"CCXD900\", \n                  \"CCXD902\", \"CCXD903\", \"CCXD904\", \"CCXD905\", \"CCXD906\", \"CCXD908\", \n                  \"CCXD909\", \"CCXD911\", \"CCXD912\", \"CCXD913\", \"CCXD914\", \"CCXD915\",\n                  \"cct2700\", \"cct2701\", \"cct2702\", \"cct2703\", \"cct2704\", \"cct2705\", \n                  \"cct2706\", \"cct2707\", \"cct2708\", \"cct2709\", \"cct2710\", \"cct2711\",\n                  \"cct2712\", \"YPA2000\", \"YPA2010\", \"YPA2020\", \"YPA2030\", \"YPA2040\", \n                  \"YPA2050\", \"YPA2060\", \"YPA2070\", \"YPA2080\", \"YPA2090\", \"YPA2100\", \n                  \"YPA2110\", \"YPA2120\", \"YPB5000\", \"YPB5010\", \"YPB5030\", \"YPB5040\", \n                  \"YPB5050\", \"YPB5060\", \"YPB5080\", \"YPB5090\", \"YPB5100\", \"YPB5120\", \n                  \"YPB5130\", \"YPB5150\", \"YPB5170\", \"YPC1650\", \"YPC1651\", \"YPC1653\", \n                  \"YPC1654\", \"YPC1655\", \"YPC1656\", \"YPC1658\", \"YPC1659\", \"YPC1660\", \n                  \"YPC1662\", \"YPC1663\", \"YPC1665\", \"YPC1667\", \"j557a\", \"j557d\", \n                  \"kq348c\", \"kq348e\", \"n8365a\", \"n8365d\", \"ku673b\", \"ku707b\", \n                  \"ku709b\", \"kw6100b\", \"kw6602b\", \"kw6604b\", \"ta7025a\", \"ta7025d\", \n                  \"tc4025a\", \"tc4025d\", \"sa163b\", \"sa165b\", \"se163b\", \"se165b\", \n                  \"j557b\", \"j557c\", \"kq348d\", \"kq348b\", \"n8365b\", \"n8365c\", \"ku708b\", \n                  \"ku706b\", \"kw6603b\", \"kw6601b\", \"ta7025b\", \"ta7025c\", \"tc4025b\", \n                  \"tc4025c\", \"sa164b\", \"sa162b\",  \"se164b\", \"se162b\", \"FJCI602\", \n                  \"FJCI604\", \"FJCI605\", \"FJCI606\", \"FJCI001\", \"FJCI369\", \"FJCI1001\"))\n\nchi_mh_mast.data <- extractVars(chi_mh.varlist)\n\nchi_mh.data <- chi_mh_mast.data",
+			"cisr_dep",
+			"cisr_selfharm",
+			"cisr_anx",
+			"chi_mh.data <- chi_mh_mast.data\n\nchi_mh.data <- chi_mh.data %>%\n  mutate_if(is.numeric, funs(ifelse( . < 0 | . == 9, NA, .)))\n\n################################################################################\n# 2. Create variable lists  \n################################################################################\nmfq.ta.vars  <- c(\"ta5020\", \"ta5021\", \"ta5022\", \"ta5023\", \"ta5024\", \"ta5025\", \n                 \"ta5026\", \"ta5027\", \"ta5028\", \"ta5029\", \"ta5030\", \"ta5031\", \n                 \"ta5032\")\nmfq.tc.vars  <- c(\"tc4030\", \"tc4031\", \"tc4032\", \"tc4033\", \"tc4034\", \"tc4035\",\n                 \"tc4036\", \"tc4037\", \"tc4038\", \"tc4039\", \"tc4040\", \"tc4041\", \n                 \"tc4042\")\nmfq.fd.vars  <- c(\"fddp110\", \"fddp112\", \"fddp113\", \"fddp114\", \"fddp115\",\n                 \"fddp116\", \"fddp118\", \"fddp119\", \"fddp121\", \"fddp122\", \"fddp123\", \n                 \"fddp124\", \"fddp125\")\nmfq.ff.vars  <- c(\"ff6500\", \"ff6502\", \"ff6503\", \"ff6504\", \"ff6505\", \"ff6506\", \n                 \"ff6508\", \"ff6509\", \"ff6511\", \"ff6512\", \"ff6513\", \"ff6514\", \n                 \"ff6515\")\nmfq.fg.vars  <- c(\"fg7210\", \"fg7212\", \"fg7213\", \"fg7214\", \"fg7215\", \"fg7216\", \n                 \"fg7218\", \"fg7219\", \"fg7221\", \"fg7222\", \"fg7223\", \"fg7224\", \n                 \"fg7225\")\nmfq.ccs.vars <- c(\"ccs4500\", \"ccs4502\", \"ccs4503\", \"ccs4504\", \"ccs4505\", \"ccs4506\", \n                  \"ccs4508\", \"ccs4509\", \"ccs4511\", \"ccs4512\", \"ccs4513\", \"ccs4514\", \n                  \"ccs4515\")\nmfq.ccx.vars <- c(\"CCXD900\", \"CCXD902\", \"CCXD903\", \"CCXD904\", \"CCXD905\", \"CCXD906\", \n                  \"CCXD908\", \"CCXD909\", \"CCXD911\", \"CCXD912\", \"CCXD913\", \"CCXD914\", \n                  \"CCXD915\")\nmfq.cct.vars <- c(\"cct2700\", \"cct2701\", \"cct2702\", \"cct2703\", \"cct2704\", \"cct2705\", \n                  \"cct2706\", \"cct2707\", \"cct2708\", \"cct2709\", \"cct2710\", \"cct2711\", \n                  \"cct2712\")\nmfq.ypa.vars <- c(\"YPA2000\", \"YPA2010\", \"YPA2020\", \"YPA2030\", \"YPA2040\", \"YPA2050\", \n                  \"YPA2060\", \"YPA2070\", \"YPA2080\", \"YPA2090\", \"YPA2100\", \"YPA2110\", \n                  \"YPA2120\")\nmfq.ypb.vars <- c(\"YPB5000\", \"YPB5010\", \"YPB5030\", \"YPB5040\", \"YPB5050\", \"YPB5060\", \n                  \"YPB5080\", \"YPB5090\", \"YPB5100\", \"YPB5120\", \"YPB5130\", \"YPB5150\", \n                  \"YPB5170\")\nmfq.ypc.vars <- c(\"YPC1650\", \"YPC1651\", \"YPC1653\", \"YPC1654\", \"YPC1655\", \"YPC1656\", \n                  \"YPC1658\", \"YPC1659\", \"YPC1660\", \"YPC1662\", \"YPC1663\", \"YPC1665\", \n                  \"YPC1667\")\n\n################################################################################\n# 3. Derive variables  \n################################################################################\n\n## ---- SDQ Internalising ------------------------------------------------------\nchi_mh.data <- chi_mh.data %>%\nmutate(\n   sqd_int_3_mat = j557a + j557d,\n   sdq_int_6_mat = kq348c + kq348e, \n   sdq_int_8_mat = n8365a + n8365d, \n   sdq_int_9_mat = ku707b + ku709b, \n   sdq_int_11_mat = kw6602b + kw6604b, \n   sdq_int_13_mat = ta7025a + ta7025d, \n   sdq_int_16_mat = tc4025a + tc4025d, \n   sdq_int_8_sch = sa163b + sa165b, \n   sdq_int_11_sch = se163b + se165b)\n   \n## ---- Externalising ----------------------------------------------------------\nchi_mh.data <- chi_mh.data %>%\nmutate(sqd_ext_3_mat = j557b + j557c, \n         sqd_ext_6_mat = kq348d + kq348b, \n         sqd_ext_8_mat = n8365b + n8365c, \n         sqd_ext_9_mat = ku708b + ku706b, \n         sqd_ext_11_mat = kw6603b + kw6601b, \n         sqd_ext_13_mat = ta7025b + ta7025c, \n         sqd_ext_16_mat = tc4025b + tc4025c, \n         sqd_ext_8_sch = sa164b + sa162b, \n         sqd_ext_11_sch = se164b + se162b)\n\n## ---- MFQ -------------------------------------------------------------------- \nchi_mh.data <- chi_mh.data %>%\nmutate(\nmfq_10_chi = proRate(chi_mh.data, mfq.fd.vars, 0),\nmfq_12_chi = proRate(chi_mh.data, mfq.ff.vars, 0),\nmfq_13_chi = proRate(chi_mh.data, mfq.fg.vars, 0),\nmfq_16_chi = proRate(chi_mh.data, mfq.ccs.vars, 0), \nmfq_17_chi = proRate(chi_mh.data, mfq.ccx.vars, 0),\nmfq_21_chi = proRate(chi_mh.data, mfq.ypa.vars, 0),\nmfq_22_chi = proRate(chi_mh.data, mfq.ypb.vars, 0),\nmfq_23_chi = proRate(chi_mh.data, mfq.ypc.vars, 0), \nmfq_9_mat = ku673b, \nmfq_11_mat = kw6100b, \nmfq_13_mat = proRate(chi_mh.data, mfq.ta.vars, 0), \nmfq_16_mat = proRate(chi_mh.data, mfq.tc.vars, 0)) \n\n## ---- CIS-R ------------------------------------------------------------------\n\n# Participants coded as meeting criteria for an anxiety disorder if they \n# meet criteria for either (i) Generalised anxiety disorder, (ii) Panic disorder, \n# (iii) Agoraphobia, or (iv) Social phobia.\n\nchi_mh.data <- chi_mh.data %>%\nmutate(\n   cisr_anx_18 = factor(\n                ifelse(FJCI602 == 1 | FJCI604 == 1 | FJCI605 == 1 | \n                       FJCI606 ==1, 1, 0),\n                labels = c(\"Yes\", \"No\")),\n   cisr_selfharm_18 = factor(\n                     ifelse(FJCI369 == 1, 0, 1),\n                     labels = c(\"No\", \"Yes\")),\n   cisr_dep_18 = factor(FJCI1001,\n                    labels = c(\"No\", \"Yes\")))",
+			" ",
+			"mat_ang_quart",
+			"mat_pers_bin",
+			"mat_pers_symp",
+			"mat_pers",
+			"mat_ang_tot",
+			"ang_quart",
+			"sup.varlist",
+			"monav.varlist",
+			"imp.varlist",
+			"detach.varlist",
+			"ang.varlist",
+			"mat_pers_mast",
+			"data.wp6",
+			"p_int_6_7_a",
+			"mat_cov.data",
+			"mat_cov_mast.data",
+			"mat_cov.varlist",
+			"pat",
+			"maternal",
+			"cov.data",
+			"cov_mast.data",
+			"cov.varlist",
+			"cov.data",
+			"library(alspac)\nlibrary(Hmisc)\ndata(current)\n\ntest.varlist <- subset(current, name %in% c(\"c645a\"))\ntest.data <- extractVars(test.varlist)\n\nHmisc::describe(test.data$c645a)",
+			"cov.data <- cov_mast.data",
+			"efa_sub.fa_6"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			" ",
+			"\\n",
+			"sdq_11.vars <- c(\"KW6504\", \"KW6506\", \"KW6511\", \"KW6517\", \"KW6521\", \"KW6501\",\n                 \"KW6509\", \"KW6514\", \"KW6520\", \"KW6524\")",
+			"",
+			" ",
+			"",
+			"\", \"",
+			"b360 b361 b362 b363 b364 b365 b366 b367 b368 b369 c590 c591 c592 c593 c594 c595 c596 c597 c598 c599 ///\n\te380 e381 e382 e383 e384 e385 e386 e387 e388 e389 f190 f191 f192 f193 f194 f195 f196 f197 f198 f199 ///\n\tg280 g281 g282 g283 g284 g285 g286 g287 g288 g289 g290 h190 h191 h192 h193 h194 h195 h196 h197 h198 h199 h200a ///\n    k3030 k3031 k3032 k3033 k3034 k3035 k3036 k3037 k3038 k3039  l2010 l2011 l2012 l2013 l2014 l2015 l2016 l2017 l2018 l2019 ///\n\tn6060 n6061 n6062 n6063 n6064 n6065 n6066 n6067 n6068 n6069 r4010 r4011 r4012 r4013 r4014 r4015 r4016 r4017 r4018 r4019 r4130: recode X min/-1=.\n\n",
+			"\", \""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.510758689573,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.diagnostics":
+	{
+		"height": 186.0
+	},
+	"output.exec":
+	{
+		"height": 126.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "lc-traj-ineq.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 265.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
