@@ -4,11 +4,10 @@
 .Ruserdata
 login.R
 daa/
-figures/
 literature/
 manuscript/
 plan/
+figures/local/
 presentations/
-tables/
 .sublime-project
 .sublime-workspace
