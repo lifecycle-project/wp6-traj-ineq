@@ -14,8 +14,32 @@ library(dplyr)
 ################################################################################
 # 1. Load workspace  
 ################################################################################
-conns <- datashield.login(logindata, restore = "mhtraj_7")
+conns <- datashield.login(logindata, restore = "mhtraj_10")
 
+
+tmp_dnbc <- dh.meanByOccasion(
+  df = "analysis_df", 
+  agevar = "ext_age_",
+  outcome = "ext_pc_",
+  conns = conns["dnbc"],
+  bands = list(
+    dnbc = c(5, 8, 8, 14)),
+  grouping = "edu_m"
+)
+
+tmp_dnbc %>% filter(cohort != "combined")
+
+tmp_dnbc_raw <- dh.meanByOccasion(
+  df = "analysis_df", 
+  agevar = "ext_age_",
+  outcome = "ext_raw_",
+  conns = conns["dnbc"],
+  bands = list(
+    dnbc = c(5, 8, 8, 14)),
+  grouping = "edu_m"
+)
+
+tmp_dnbc_raw %>% filter(cohort != "combined")
 
 ################################################################################
 # 2. QC  

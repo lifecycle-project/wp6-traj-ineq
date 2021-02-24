@@ -31,7 +31,7 @@ ls("package:dsBaseClient")
 
 ## ---- Non-repeated -----------------------------------------------------------
 nonrep.vars <- c("child_id", "sex", "coh_country", "cohort_id", "eusilc_income", 
-                 "eusilc_income_quintiles")
+                 "eusilc_income_quintiles", "agebirth_m_y")
 
 ## ---- Yearly repeated --------------------------------------------------------
 yearrep.vars <- c("child_id", "edu_m_", "age_years")
@@ -84,7 +84,7 @@ cohorts_tables <- bind_rows(
     table = c(
       "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200513_1_Inequalities",
       "lc_isglobal_core_2_1.2_1_core_1_0_yearly_rep_200513_1_Inequalities",
-      "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities")), 
+      "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200217_1_bmi")), 
   tibble(
     conn_name = "sws",
     table = c(
@@ -110,7 +110,7 @@ cohorts_tables <- bind_rows(
 # 2. Assign variables
 ################################################################################
 cohorts_tables %>%
-  filter(conn_name %in% c("chop", "moba", "raine", "dnbc", "inma", "elfe", "sws")) %>%
+  filter(conn_name %in% c("chop", "moba", "raine", "dnbc", "inma")) %>%
   pwalk(function(conn_name, table, type){
     
     datashield.assign(
@@ -499,10 +499,10 @@ ds.scatterPlot(
 ## At the moment this has to be done manually based on inspecting the scatter 
 ## plot
 
-ext_cbcl_coh <- c("moba", "raine")
-ext_sdq_coh <- "dnbc"
-int_cbcl_coh <- c("moba", "raine")
-int_sdq_coh <- "dnbc"
+#ext_cbcl_coh <- c("moba", "raine")
+#ext_sdq_coh <- "dnbc"
+#int_cbcl_coh <- c("moba", "raine")
+#int_sdq_coh <- "dnbc"
 
 
 ################################################################################

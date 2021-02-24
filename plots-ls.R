@@ -44,6 +44,9 @@ theme_traj <- theme(
   panel.grid.minor.y=element_blank(),
   panel.grid.major.y=element_blank())
 
+
+ineq_palette <- c("#264653", "#2a9d8f", "#E9C46A", "#F4A261", "#E76F51", "#000000")
+
 ################################################################################
 # 2. Numbers for each cohort  
 ################################################################################
@@ -73,13 +76,16 @@ mutate(
 
 ## ---- Plot -------------------------------------------------------------------
 mat.plot <- mat_ed.tab %>%
-  ggplot(aes(x = category, y = valid_perc, colour = cohort)) +
+  ggplot(aes(x = category, y = valid_perc, fill = cohort)) +
   geom_bar(stat = "identity") +
   facet_wrap(~cohort, ncol = 5) +
   theme_traj +
   xlab("Maternal education category (1 = high)") +
   ylab("Percent") +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_x_discrete(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = ineq_palette)
   
 
 ## ---- Save plot --------------------------------------------------------------
@@ -133,8 +139,6 @@ ns <- ns_for_plot %>%
   dplyr::rename("N" = valid_n)
 
 ## ---- Plot -------------------------------------------------------------------
-palette_n <- c("#ff2600", rep("#005690", 10))
-
 n.plot <- ggplot(data = ns, aes(x = mean, y = cohort, size = N, colour = cohort)) +
   geom_point() + 
   xlab("Child age (years)") +
@@ -146,7 +150,8 @@ n.plot <- ggplot(data = ns, aes(x = mean, y = cohort, size = N, colour = cohort)
         legend.position = "top") +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 1), expand = c(0, 0)) +
   scale_colour_manual(values = palette_n) +
-  guides(colour = FALSE)
+  guides(colour = FALSE) +
+  scale_colour_manual(values = ineq_palette)
 
 ## ---- Save plots --------------------------------------------------------------
 ggsave(
@@ -190,7 +195,7 @@ int_lin_plot.pred %<>%
 
 ## ---- Plot externalising model -----------------------------------------------
 ext_lin.plot <- ggplot() + 
-  geom_line(data = ext_lin_plot.pred, aes(x = age, y = sii, colour = cohort)) +
+  geom_line(data = ext_lin_plot.pred, aes(x = age, y = sii, colour = cohort), size = 0.8) +
   geom_ribbon(data = ext_lin_plot.pred, aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
   facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
@@ -200,11 +205,12 @@ ext_lin.plot <- ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
-  ylab("Slope Index of Inequality")
+  ylab("Slope Index of Inequality") +
+  scale_colour_manual(values = ineq_palette)
 
 ## ---- Plot internalising model -----------------------------------------------
 int_lin.plot <- ggplot() + 
-  geom_line(data = int_lin_plot.pred, aes(x = age, y = sii, colour = cohort)) +
+  geom_line(data = int_lin_plot.pred, aes(x = age, y = sii, colour = cohort), size = 0.8) +
   geom_ribbon(data = int_lin_plot.pred, aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
   facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
@@ -214,7 +220,8 @@ int_lin.plot <- ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
-  ylab("Slope Index of Inequality")
+  ylab("Slope Index of Inequality") +
+  scale_colour_manual(values = ineq_palette[c(1, 3:6)])
 
 ## ---- Save plots -------------------------------------------------------------
 ggsave(
@@ -260,7 +267,7 @@ int_nl_plot.pred %<>%
 
 ## ---- Plot externalising model -----------------------------------------------
 ext_nl.plot <- ggplot() + 
-  geom_line(data = ext_nl_plot.pred, aes(x = age, y = sii, colour = cohort)) +
+  geom_line(data = ext_nl_plot.pred, aes(x = age, y = sii, colour = cohort), size = 0.8) +
   geom_ribbon(data = ext_nl_plot.pred,  aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
   facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
@@ -270,12 +277,13 @@ ext_nl.plot <- ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
-  ylab("Slope Index of Inequality")
+  ylab("Slope Index of Inequality") +
+  scale_colour_manual(values = ineq_palette[c(1, 4:6)])
 
 
 ## ---- Plot internalising model -----------------------------------------------
 int_nl.plot <- ggplot() + 
-  geom_line(data = int_nl_plot.pred, aes(x = age, y = sii, colour = cohort)) +
+  geom_line(data = int_nl_plot.pred, aes(x = age, y = sii, colour = cohort), size = 0.8) +
   geom_ribbon(data = int_nl_plot.pred,  aes(x = age, ymin = low_ci, ymax = upper_ci), alpha = 0.1) +
   facet_wrap(~cohort, ncol = 2) +
   scale_x_continuous(limit = c(0, 18), breaks = seq(0, 18, 2), expand = c(0, 0)) + 
@@ -285,7 +293,8 @@ int_nl.plot <- ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
-  ylab("Slope Index of Inequality")
+  ylab("Slope Index of Inequality") +
+  scale_colour_manual(values = ineq_palette[c(1, 4:6)])
 
 ## ---- Save plots -------------------------------------------------------------
 ggsave(

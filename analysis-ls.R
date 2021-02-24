@@ -490,8 +490,200 @@ int_nl_comb.pred <- int_nl.pred %>%
 int_nl_plot.pred <- bind_rows(int_nl_pred_coh, int_nl_comb.pred)
 
 
+################################################################################
+# 5. NON-LINEAR MODELS, ALL COHORTS + EXTRA CONFOUNDERS  
+################################################################################
+################################################################################
+# Run models  
+################################################################################
+all_coh <- c("chop", "dnbc", "inma", "moba", "raine")
+
+## ---- Externalising ----------------------------------------------------------
+ext_poly_pc.fit <- dh.lmeMultPoly(
+  df = "analysis_df", 
+  formulae = ext_form_pc, 
+  conns = conns[all_coh])
+
+## ---- Internalising ----------------------------------------------------------
+int_poly_pc.fit <- dh.lmeMultPoly(
+  df = "analysis_df", 
+  formulae = int_form_pc,
+  conns = conns[nl_coh])
 
 
+################################################################################
+# Display best fitting model  
+################################################################################
+ext_poly_pc.fit$models[[which.min(ext_poly_pc.fit$fit$av_rank)]]
+int_poly_pc.fit$models[[which.min(int_poly_pc.fit$fit$av_rank)]]
+
+ext_poly_pc.fit$fit %>% arrange(av_rank)
+int_poly_pc.fit$fit %>% arrange(av_rank)
+
+
+################################################################################
+# Rerun best fitting models  
+################################################################################
+
+## ---- Externalising ----------------------------------------------------------
+ext_pc.fit <- ds.lmerSLMA(
+  dataName = "analysis_df",
+  formula = "ext_pc_ ~ 1 + ext_age_m_1 + ext_age_m_0_5 + edu_rank_num + sex + 
+  edu_rank_num*ext_age_m_1 + edu_rank_num*ext_age_m_0_5 + (1|child_id_int)",
+  datasources = conns[nl_coh])
+
+
+## ---- Internalising ----------------------------------------------------------
+int_pc.fit <- ds.lmerSLMA(
+  dataName = "analysis_df",
+  formula = "int_pc_ ~ 1 + int_age_m_2 + int_age_m_1 + edu_rank_num + sex + 
+  edu_rank_num*int_age_m_2 + edu_rank_num*int_age_m_1 + (1|child_id_int)",
+  datasources = conns[nl_coh])
+
+
+################################################################################
+# Non-linear predicted values: externalising
+################################################################################
+ext_nl.tab <- dh.lmerTab(
+  fit = ext_pc.fit, 
+  coh = nl_coh,
+  coh_format = "rows") %>%
+  dplyr::rename(
+    "ext_age_m_1_ed" = 'ext_age_m_1:edu_rank_num', 
+    "ext_age_m_0_5_ed" = 'ext_age_m_0_5:edu_rank_num')
+
+## ---- Predicted values across these reference ages ---------------------------
+ext_nl.pred <- ext_nl.tab %>%
+  pmap(
+    function(cohort, ext_age_m_1_ed, ext_age_m_0_5_ed, edu_rank_num, ...) {
+      
+      pred <- tibble(
+        age = seq(1, 18, by = 0.01),
+        cohort = cohort,
+        age_m_1 = age^-1,
+        age_m_0_5 = age^-0.5,
+        sii = edu_rank_num + age_m_1*ext_age_m_1_ed + age_m_0_5*ext_age_m_0_5_ed
+      )
+      
+      return(pred)
+    }
+  ) %>% bind_rows()
+
+## ---- Reference ages ---------------------------------------------------------
+age_min_max <- ages_ref$continuous %>% 
+  select(cohort_ref = cohort, perc_5, perc_95) %>%
+  mutate(perc_95 = ifelse(cohort_ref == "combined", 17.1, perc_95))
+
+ext_nl.pred <- age_min_max %>%
+  filter(cohort_ref %in% c("chop", "moba", "raine", "combined")) %>%
+  pmap(function(cohort_ref, perc_5, perc_95, ...){
+    
+    ext_nl.pred %>%
+      filter(cohort == cohort_ref & between(age, perc_5, perc_95))
+  }) %>% bind_rows()
+
+
+## ---- Standard errors --------------------------------------------------------
+ext_nl_pred_coh <- ext_nl.pred %>% 
+  filter(cohort != "combined") %>%
+  mutate(study_ref = case_when(
+    cohort == "chop" ~ "study1", 
+    cohort == "moba" ~ "study2", 
+    cohort == "raine" ~ "study3"))
+
+# First we do for cohorts separately
+ext_nl_pred_coh_se <- ext_nl_pred_coh %>%
+  pmap(function(study_ref, age_m_1, age_m_0_5, ...){
+    
+    vcov <- ext_pc.fit$output.summary[[study_ref]]$vcov
+    C <- c(0, 0, 0, 1, 0, age_m_1, age_m_0_5)
+    std.er <- sqrt(t(C) %*% vcov %*% C)
+    out <- std.er@x
+    return(out)}) %>%
+  unlist
+
+ext_nl_pred_coh %<>% 
+  mutate(se = ext_nl_pred_coh_se) %>%
+  mutate(low_ci = sii - 1.96*se, 
+         upper_ci = sii + 1.96*se)
+
+ext_nl_comb.pred <- ext_nl.pred %>%
+  filter(cohort == 'combined') %>%
+  mutate(low_ci = sii, upper_ci = sii)
+
+ext_nl_plot.pred <- bind_rows(ext_nl_pred_coh, ext_nl_comb.pred)
+
+################################################################################
+# Non-linear predicted values: internalising
+################################################################################
+int_nl.tab <- dh.lmerTab(
+  fit = int_pc.fit, 
+  coh = nl_coh,
+  coh_format = "rows") %>%
+  dplyr::rename(
+    "int_age_m_2_ed" = 'int_age_m_2:edu_rank_num', 
+    "int_age_m_1_ed" = 'int_age_m_1:edu_rank_num')
+
+## ---- Predicted values across these reference ages ---------------------------
+int_nl.pred <- int_nl.tab %>%
+  pmap(
+    function(cohort, int_age_m_2_ed, int_age_m_1_ed, edu_rank_num, ...) {
+      
+      pred <- tibble(
+        age = seq(1, 18, by = 0.01),
+        cohort = cohort,
+        age_m_2 = age^-2,
+        age_m_1 = age^-1,
+        sii = edu_rank_num + age_m_2*int_age_m_2_ed + age_m_1*int_age_m_1_ed
+      )
+      
+      return(pred)
+    }
+  ) %>% bind_rows()
+
+## ---- Reference ages ---------------------------------------------------------
+age_min_max <- ages_ref$continuous %>% 
+  select(cohort_ref = cohort, perc_5, perc_95) %>%
+  mutate(perc_95 = ifelse(cohort_ref == "combined", 17.1, perc_95))
+
+int_nl.pred <- age_min_max %>%
+  filter(cohort_ref %in% c("chop", "moba", "raine", "combined")) %>%
+  pmap(function(cohort_ref, perc_5, perc_95, ...){
+    
+    int_nl.pred %>%
+      filter(cohort == cohort_ref & between(age, perc_5, perc_95))
+  }) %>% bind_rows()
+
+
+## ---- Standard errors --------------------------------------------------------
+int_nl_pred_coh <- int_nl.pred %>% 
+  filter(cohort != "combined") %>%
+  mutate(study_ref = case_when(
+    cohort == "chop" ~ "study1", 
+    cohort == "moba" ~ "study2", 
+    cohort == "raine" ~ "study3"))
+
+# First we do for cohorts separately
+int_nl_pred_coh_se <- int_nl_pred_coh %>%
+  pmap(function(study_ref, age_m_2, age_m_1, ...){
+    
+    vcov <- int_pc.fit$output.summary[[study_ref]]$vcov
+    C <- c(0, 0, 0, 1, 0, age_m_2, age_m_1)
+    std.er <- sqrt(t(C) %*% vcov %*% C)
+    out <- std.er@x
+    return(out)}) %>%
+  unlist
+
+int_nl_pred_coh %<>% 
+  mutate(se = int_nl_pred_coh_se) %>%
+  mutate(low_ci = sii - 1.96*se, 
+         upper_ci = sii + 1.96*se)
+
+int_nl_comb.pred <- int_nl.pred %>%
+  filter(cohort == 'combined') %>%
+  mutate(low_ci = sii, upper_ci = sii)
+
+int_nl_plot.pred <- bind_rows(int_nl_pred_coh, int_nl_comb.pred)
 
 
 
