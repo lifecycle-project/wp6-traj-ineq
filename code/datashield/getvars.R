@@ -6,10 +6,6 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
-################################################################################
-# 1. Load packages  
-################################################################################
-
 library(DSI)
 library(DSOpal)
 library(dsBaseClient)
@@ -23,10 +19,11 @@ library(ggplot2)
 #library(remotes)
 #install_github("lifecycle-project/ds-helper", ref = "maintenance")
 library(dsHelper)
+library(remotes)
 
 ls("package:dsBaseClient")
 ################################################################################
-# 2. Define variables and tables
+# 1. Define variables and tables
 ################################################################################
 
 ## ---- Non-repeated -----------------------------------------------------------
@@ -45,16 +42,16 @@ mhrep.vars <- c("child_id", "age_years", "ext_raw_", "ext_age_", "ext_instr_", "
                 "adhd_eval_", "adhd_pro_", "adhd_avg_", "adhd_pc_", "nvi_raw_", 
                 "nvi_age_", "nvi_instr_", "nvi_eval_", "nvi_pro_", "nvi_avg_", 
                 "nvi_pc_", "lan_raw_", "lan_age_", "lan_instr_", "lan_eval_", 
-                "lan_pro_", "lan_avg_", "lan_pc_")
+                "lan_pro_", "lan_avg_", "lan_pc_", "adhdR_", "adhdR_age_")
 
 ## ---- Table names for cohorts ------------------------------------------------
 cohorts_tables <- bind_rows(
   tibble(
-    conn_name = "ninfea",
+    conn_name = "alspac",
     table = c(
-      "lc_ninfea_core_2_0.2_0_core_1_0_non_rep",
-      "lc_ninfea_core_2_0.2_0_core_1_0_yearly_rep",
-      "lc_ninfea_outcome_1_0.1_0_outcome_1_0_yearly_rep")),
+      "alspac/2_1_core_1_3/non_rep",
+      "alspac/2_1_core_1_3/yearly_rep",
+      "alspac/1_1_outcome_1_3/yearly_rep")),
   tibble(
     conn_name = "chop",
     table = c(
@@ -62,35 +59,17 @@ cohorts_tables <- bind_rows(
       "lc_chop_core_2_1.2_1_core_yearly_rep_mh_traj",
       "lc_chop_outcome_1_1.1_1_outcome_yearly_rep_mh_traj")),
   tibble(
-    conn_name = "moba",
-    table = c(
-      "lc_moba_core_2_0.2_0_core_non_rep_bmi_poc_study",
-      "lc_moba_core_2_0.2_0_core_yearly_rep_bmi_poc_study",
-      "lc_moba_outcome_1_0.1_0_outcome_yearly_rep_inequalities_MH_trajectories")),
-  tibble(
-    conn_name = "raine",
-    table = c(
-      "lc_raine_core_2_1.2_1_core_1_0_non_rep",
-      "lc_raine_core_2_1.2_1_core_1_0_yearly_rep",
-      "lc_raine_outcome_1_1.1_1_outcome_1_0_yearly_rep")),
-  tibble(
     conn_name = "dnbc",
     table = c(
       "lc_dnbc_core_2_1.2_1_core_non_rep_tcadman_2020-lc19",
       "lc_dnbc_core_2_1.2_1_core_yearly_rep_tcadman_2020-lc19",
       "lc_dnbc_outcome_1_1.1_1_outcome_yearly_rep_tcadman_socecoineq_study")),
   tibble(
-    conn_name = "inma",
+    conn_name = "eden",
     table = c(
-      "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200513_1_Inequalities",
-      "lc_isglobal_core_2_1.2_1_core_1_0_yearly_rep_200513_1_Inequalities",
-      "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200217_1_bmi")), 
-  tibble(
-    conn_name = "sws",
-    table = c(
-      "lc_sws_core_2_1.2_1_core_1_1_non_rep",
-      "lc_sws_core_2_1.2_1_core_1_1_yearly_rep",
-      "lc_sws_outcome_1_1.1_1_outcome_1_1_yearly_rep")),
+      "lc_eden_core_2_1.Project1_WP6_non_rep",
+      "lc_eden_core_2_1.Project1_WP6_yearly_rep",
+      "lc_eden_outcome_1_1.Project1_WP6_yearly_rep")),
   tibble(
     conn_name = "elfe",
     table = c(
@@ -98,19 +77,48 @@ cohorts_tables <- bind_rows(
       "lc_elfe_core_2_1.Project1_WP6_yearly_rep",
       "lc_elfe_outcome_1_1.Project1_WP6_yearly_rep")),
   tibble(
+    conn_name = "inma",
+    table = c(
+      "lc_isglobal_core_2_1.2_1_core_1_0_non_rep_200513_1_Inequalities",
+      "lc_isglobal_core_2_1.2_1_core_1_0_yearly_rep_200513_1_Inequalities",
+      "lc_isglobal_outcome_1_1.1_1_outcome_1_0_yearly_rep_200513_1_Inequalities")), 
+  tibble(
+    conn_name = "moba",
+    table = c(
+      "lc_moba_core_2_0.2_0_core_non_rep_bmi_poc_study",
+      "lc_moba_core_2_0.2_0_core_yearly_rep_bmi_poc_study",
+      "lc_moba_outcome_1_0.1_0_outcome_yearly_rep_inequalities_MH_trajectories")),
+  tibble(
     conn_name = "nfbc86",
     table = c(
       "lc_nfbc86_core_2_1.p0650_nfbc86_2_1_core_non_rep",
       "lc_nfbc86_core_2_1.p0650_nfbc86_2_1_core_yearly_rep",
-      "lc_nfbc86_outcome_1_1.p0650_nfbc86_1_1_outcome_yearly_rep"))) %>%
-  mutate(type = rep(c("nonrep", "yearrep", "mhrep"), 9))
+      "lc_nfbc86_outcome_1_1.p0650_nfbc86_1_1_outcome_yearly_rep")),
+  tibble(
+    conn_name = "ninfea",
+    table = c(
+      "lc_ninfea_core_2_0.2_0_core_1_0_non_rep",
+      "lc_ninfea_core_2_0.2_0_core_1_0_yearly_rep",
+      "lc_ninfea_outcome_1_0.1_0_outcome_1_0_yearly_rep")),
+  tibble(
+    conn_name = "raine",
+    table = c(
+      "lc_raine_core_2_1.2_1_core_1_0_non_rep",
+      "lc_raine_core_2_1.2_1_core_1_0_yearly_rep",
+      "lc_raine_outcome_1_1.1_1_outcome_1_0_yearly_rep")),
+  tibble(
+    conn_name = "sws",
+    table = c(
+      "lc_sws_core_2_1.2_1_core_1_1_non_rep",
+      "lc_sws_core_2_1.2_1_core_1_1_yearly_rep",
+      "lc_sws_outcome_1_1.1_1_outcome_1_1_yearly_rep"))) %>%
+  mutate(type = rep(c("nonrep", "yearrep", "mhrep"), 11))
 
 
 ################################################################################
 # 2. Assign variables
 ################################################################################
 cohorts_tables %>%
-  filter(conn_name %in% c("chop", "moba", "raine", "dnbc", "inma")) %>%
   pwalk(function(conn_name, table, type){
     
     datashield.assign(

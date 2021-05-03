@@ -45,20 +45,20 @@ theme_traj <- theme(
   panel.grid.major.y=element_blank())
 
 
-ineq_palette <- c("#264653", "#2a9d8f", "#E9C46A", "#F4A261", "#E76F51", "#000000")
+ineq_palette <- c("#264653", "#2a9d8f", "#E9C46A", "#F4A261", "#E76F51", "#873156", "#000000")
 
 ################################################################################
 # 2. Numbers for each cohort  
 ################################################################################
 ## ---- Cohort numbers ---------------------------------------------------------
-included_n <- paste0("study", c(1:5)) %>%
+included_n <- paste0("study", c(1:6)) %>%
   map(function(x){
     
     ext_lin.fit$output.summary[[x]]$ngrps    
     
   })
 
-names(included_n) <- ext_pc_coh_lin
+names(included_n) <- coh_lin
 
 
 ################################################################################
@@ -67,6 +67,7 @@ names(included_n) <- ext_pc_coh_lin
 mat_ed.tab <- mat_ed_stats$categorical %>%
 mutate(
   cohort = case_when(
+    cohort == "alspac" ~ "ALSPAC",
     cohort == "chop" ~ "CHOP",
     cohort == "dnbc" ~ "DNBC",
     cohort == "inma" ~ "INMA",
@@ -78,7 +79,7 @@ mutate(
 mat.plot <- mat_ed.tab %>%
   ggplot(aes(x = category, y = valid_perc, fill = cohort)) +
   geom_bar(stat = "identity") +
-  facet_wrap(~cohort, ncol = 5) +
+  facet_wrap(~cohort, ncol = 6) +
   theme_traj +
   xlab("Maternal education category (1 = high)") +
   ylab("Percent") +
@@ -90,7 +91,7 @@ mat.plot <- mat_ed.tab %>%
 
 ## ---- Save plot --------------------------------------------------------------
 ggsave(
-  filename="./figures/mat_dist.png", 
+  filename="./figures/GA21Spring/mat_dist.png", 
   plot = mat.plot,
   h = 12, w = 20, units="cm", dpi=1200,
   device="png")
@@ -102,8 +103,8 @@ ggsave(
 
 ## ---- Prepare data for plotting ----------------------------------------------
 ref <- tibble(
-  cohort = ext_pc_coh_lin,
-  table = c(rep("ext_pc__derived", 5))
+  cohort = coh_lin,
+  table = c(rep("ext_pc__derived", 6))
 )
 
 ns_for_plot <- ref %>% 
@@ -165,12 +166,12 @@ ggsave(
 ################################################################################
 
 ## ---- Prepare data for plotting ----------------------------------------------
-ext_lin_labs <- c("CHOP", "DNBC", "INMA", "MoBa", "Raine", "Combined")
-int_lin_labs <- c("CHOP", "INMA", "MoBa", "Raine", "Combined")
+lin_labs <- c("ALSPAC", "CHOP", "DNBC", "INMA", "MoBa", "Raine", "Combined")
 
 ext_lin_plot.pred %<>%
   mutate(
     cohort = case_when(
+      cohort == "alspac" ~ "ALSPAC",
       cohort == "chop" ~ "CHOP",
       cohort == "dnbc" ~ "DNBC",
       cohort == "inma" ~ "INMA",
@@ -178,19 +179,21 @@ ext_lin_plot.pred %<>%
       cohort == "raine" ~ "Raine",
       cohort == "combined" ~ "Combined")) %>%
   mutate(
-    cohort = factor(cohort, labels = ext_lin_labs, levels = ext_lin_labs, ordered = TRUE)
+    cohort = factor(cohort, labels = lin_labs, levels = lin_labs, ordered = TRUE)
   )
 
 int_lin_plot.pred %<>%
   mutate(
     cohort = case_when(
+      cohort == "alspac" ~ "ALSPAC",
       cohort == "chop" ~ "CHOP",
+      cohort == "dnbc" ~ "DNBC",
       cohort == "inma" ~ "INMA",
       cohort == "moba" ~ "MoBa",
       cohort == "raine" ~ "Raine",
       cohort == "combined" ~ "Combined")) %>%
   mutate(
-    cohort = factor(cohort, labels = int_lin_labs, levels = int_lin_labs, ordered = TRUE)
+    cohort = factor(cohort, labels = lin_labs, levels = lin_labs, ordered = TRUE)
   )
 
 ## ---- Plot externalising model -----------------------------------------------
@@ -221,17 +224,17 @@ int_lin.plot <- ggplot() +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
   ylab("Slope Index of Inequality") +
-  scale_colour_manual(values = ineq_palette[c(1, 3:6)])
+  scale_colour_manual(values = ineq_palette)
 
 ## ---- Save plots -------------------------------------------------------------
 ggsave(
-  filename="./figures/ext_lin.png", 
+  filename="./figures/GA21Spring/ext_lin.png", 
   plot = ext_lin.plot,
   h = 12, w = 20, units="cm", dpi=1000,
   device="png")
 
 ggsave(
-  filename="./figures/int_lin.png", 
+  filename="./figures/GA21Spring/int_lin.png", 
   plot = int_lin.plot,
   h = 12, w = 20, units="cm", dpi=1200,
   device="png")
@@ -241,11 +244,12 @@ ggsave(
 ################################################################################
 
 ## ---- Prepare data for plotting ----------------------------------------------
-nl_labs <- c("CHOP", "MoBa", "Raine", "Combined")
+nl_labs <- c("ALSPAC", "CHOP", "MoBa", "Raine", "Combined")
 
 ext_nl_plot.pred %<>%
   mutate(
     cohort = case_when(
+      cohort == "alspac" ~ "ALSPAC",
       cohort == "chop" ~ "CHOP",
       cohort == "moba" ~ "MoBa",
       cohort == "raine" ~ "Raine",
@@ -257,6 +261,7 @@ ext_nl_plot.pred %<>%
 int_nl_plot.pred %<>%
   mutate(
     cohort = case_when(
+      cohort == "alspac" ~ "ALSPAC",
       cohort == "chop" ~ "CHOP",
       cohort == "moba" ~ "MoBa",
       cohort == "raine" ~ "Raine",
@@ -278,7 +283,7 @@ ext_nl.plot <- ggplot() +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
   ylab("Slope Index of Inequality") +
-  scale_colour_manual(values = ineq_palette[c(1, 4:6)])
+  scale_colour_manual(values = ineq_palette[c(1:2, 5:7)])
 
 
 ## ---- Plot internalising model -----------------------------------------------
@@ -294,7 +299,7 @@ int_nl.plot <- ggplot() +
   geom_hline(yintercept = 20, alpha = 0.05) +
   xlab("Child age") +
   ylab("Slope Index of Inequality") +
-  scale_colour_manual(values = ineq_palette[c(1, 4:6)])
+  scale_colour_manual(values = ineq_palette[c(1:2, 5:7)])
 
 ## ---- Save plots -------------------------------------------------------------
 ggsave(
