@@ -500,7 +500,7 @@ int_nl.pred <- age_min_max %>%
 int_nl_pred_coh <- int_nl.pred %>% 
   filter(cohort != "combined") %>%
   mutate(study_ref = case_when(
-    cohort == "alspac" ~ "study1"
+    cohort == "alspac" ~ "study1",
     cohort == "chop" ~ "study2", 
     cohort == "moba" ~ "study3", 
     cohort == "raine" ~ "study4"))

@@ -234,10 +234,8 @@ cbcl_nl.pred <- cbcl_nl.tab %>%
         age_m_0_5 = age^-0.5,
         age_0_5 = age^0.5,
         sex = 0,
-        sex_m_0_5 = 0,
-        sex_0_5 = 0, 
         predicted = intercept + age_m_0_5*ext_age_m_0_5 + age_0_5*ext_age_0_5 +
-          sex*sex2 + sex_m_0_5 + sex_0_5
+          sex*sex2 + age_m_0_5*sex*ext_age_m_0_5_sex + age_0_5*sex*ext_age_0_5_sex
       )
       
       pred_f <- tibble(
@@ -249,7 +247,7 @@ cbcl_nl.pred <- cbcl_nl.tab %>%
         sex_m_0_5 = age_m_0_5*ext_age_m_0_5_sex,
         sex_0_5 = age_0_5*ext_age_0_5_sex,
         predicted = intercept + age_m_0_5*ext_age_m_0_5 + age_0_5*ext_age_0_5 +
-          sex*sex2 + sex_m_0_5 + sex_0_5
+          sex*sex2 + age_m_0_5*sex*ext_age_m_0_5_sex + age_0_5*sex*ext_age_0_5_sex
       )
       
         pred <- bind_rows(pred_m, pred_f)
@@ -281,16 +279,16 @@ cbcl_nl.pred_coh <- cbcl_nl.pred %>%
 
 # First we do for cohorts separately
 cbcl_nl.pred_coh_se <- cbcl_nl.pred_coh %>%
-  pmap(function(study_ref, age_0_5, age_m_0_5, sex, sex_0_5, sex_m_0_5, ...){
+  pmap(function(study_ref, age_0_5, age_m_0_5, sex, ...){
     
     vcov <- cbcl_best.fit$output.summary[[study_ref]]$vcov
-    C <- c(1, age_m_0_5, age_0_5, sex, sex_m_0_5, sex_0_5)
+    C <- c(1, age_m_0_5, age_0_5, sex, age_m_0_5*sex, age_0_5*sex)
     std.er <- sqrt(t(C) %*% vcov %*% C)
     out <- std.er@x
     return(out)}) %>%
   unlist
 
-cbcl_nl.pred <- cbcl_nl.pred_coh %<>% 
+cbcl.pred <- cbcl_nl.pred_coh %<>% 
   mutate(se = cbcl_nl.pred_coh_se) %>%
   mutate(low_ci = predicted - 1.96*se, 
          upper_ci = predicted + 1.96*se)
@@ -326,10 +324,8 @@ sdq_nl.pred <- sdq_nl.tab %>%
         age_m_2 = age^-2,
         age_m_1 = age^-1,
         sex = 0,
-        sex_m_2 = 0,
-        sex_m_1 = 0, 
         predicted = intercept + age_m_2*ext_age_m_2 + age_m_1*ext_age_m_1 +
-          sex*sex2 + sex_m_2 + sex_m_1
+          sex*sex2 + sex*age_m_2*ext_age_m_2_sex + sex*age_m_1*ext_age_m_1_sex
       )
       
       pred_f <- tibble(
@@ -338,10 +334,8 @@ sdq_nl.pred <- sdq_nl.tab %>%
         age_m_2 = age^-2,
         age_m_1 = age^-1,
         sex = 1,
-        sex_m_2 = age_m_2*ext_age_m_2_sex,
-        sex_m_1 = age_m_1*ext_age_m_1_sex,
         predicted = intercept + age_m_2*ext_age_m_2 + age_m_1*ext_age_m_1 +
-          sex*sex2 + sex_m_2 + sex_m_1
+          sex*sex2 + sex*age_m_2*ext_age_m_2_sex + sex*age_m_1*ext_age_m_1_sex
       )
       
       pred <- bind_rows(pred_m, pred_f)
@@ -372,10 +366,10 @@ sdq_nl.pred_coh <- sdq_nl.pred %>%
 
 # First we do for cohorts separately
 sdq_nl.pred_coh_se <- sdq_nl.pred_coh %>%
-  pmap(function(study_ref, age_m_2, age_m_1, sex, sex_m_2, sex_m_1, ...){
+  pmap(function(study_ref, age_m_2, age_m_1, sex, ...){
     
     vcov <- sdq_best.fit$output.summary[[study_ref]]$vcov
-    C <- c(1, age_m_2, age_m_1, sex, sex_m_2, sex_m_1)
+    C <- c(1, age_m_2, age_m_1, sex, age_m_2*sex, age_m_1*sex)
     std.er <- sqrt(t(C) %*% vcov %*% C)
     out <- std.er@x
     return(out)}) %>%

@@ -145,6 +145,8 @@ ds.dataFrameFill("mhrep", "mhrep")
 datashield.workspace_save(conns, "mhtraj_2")
 conns <- datashield.login(logindata, restore = "mhtraj_2")
 
+ds.summary("mhrep$adhdR_", datasources = conns["raine"])
+
 ################################################################################
 # 4. Derive maternal education variable
 ################################################################################
