@@ -1,0 +1,275 @@
+﻿Cohort,Domain,Measure,Time point
+MoBa,Motor,Ages & stages questionnaire,0-1
+MoBa,Motor,Ages & stages questionnaire,1-2
+MoBa,Motor,Ages & stages questionnaire,3-4
+MoBa,Motor,Ages & stages questionnaire,5-6
+RAINE,Motor,Ages & stages questionnaire,0-1
+RAINE,Motor,Ages & stages questionnaire,1-2
+RAINE,Motor,Ages & stages questionnaire,3-4
+EDEN,Motor,Ages & stages questionnaire,3-4
+EDEN,Motor,Ages & stages questionnaire,4-5
+RAINE,Motor,Bayley scales of infant development,0-1
+RAINE,Motor,Bayley scales of infant development,1-2
+EDEN,Motor,Brunet-Lezine psychometric scale ,1-2
+EDEN,Motor,Brunet-Lezine psychometric scale ,2-3
+ELFE,Motor,Child Development Inventory,1-2
+ELFE,Motor,Child Development Inventory,3-4
+ELFE,Motor,Child Development Inventory,5-6
+RAINE,Motor,STYCAR,0-1
+RAINE,Motor,STYCAR,1-2
+ALSPAC,Motor,Denver,0-1
+ALSPAC,Motor,Denver,1-2
+ALSPAC,Motor,Denver,2-3
+ALSPAC,Motor,Denver,4-5
+ALSPAC,Motor,Denver,5-6
+ALSPAC,Motor,Denver,6-7
+RAINE,Motor,Denver,0-1
+RAINE,Motor,Denver,1-2
+RAINE,Motor,Denver,2-3
+INMA,Motor,Finger tapping,7-8
+INMA,Motor,Finger tapping,9-10
+INMA,Motor,Finger tapping,10-1
+RAINE,Motor,Gessell,0-1
+RAINE,Motor,Gessell,1-2
+RAINE,Motor,Griffiths,0-1
+RAINE,Motor,Griffiths,1-2
+NFBC1986,Motor,Unnamed,1-2
+NFBC1986,Motor,Unnamed,7-8
+NFBC1986,Motor,Unnamed,14-16
+NFBC1966,Motor,Unnamed,0-1
+NFBC1966,Motor,Unnamed,1-2
+NFBC1966,Motor,Unnamed,2-3
+NFBC1966,Motor,Unnamed,3-4
+NFBC1966,Motor,Unnamed,4-5
+GEN-R,Motor,Touwen,0-1
+GEN-R,Motor,Touwen,1-2
+RAINE,Motor,Woodside,0-1
+RAINE,Motor,Woodside,1-2
+RAINE,Internalising,BDI,12-14
+RAINE,Internalising,BDI,14-16
+GEN-R,Internalising,CBCL,1-2
+GEN-R,Internalising,CBCL,3-4
+GEN-R,Internalising,CBCL,5-6
+GEN-R,Internalising,CBCL,9-10
+GEN-R,Externalising,CBCL,1-2
+GEN-R,Externalising,CBCL,3-4
+GEN-R,Externalising,CBCL,5-6
+GEN-R,Externalising,CBCL,9-10
+INMA,Internalising,CBCL,7-8
+INMA,Internalising,CBCL,8-9
+INMA,Internalising,CBCL,9-10
+INMA,Externalising,CBCL,7-8
+INMA,Externalising,CBCL,8-9
+INMA,Externalising,CBCL,9-10
+MoBa,Internalising,CBCL,1-2
+MoBa,Internalising,CBCL,3-4
+MoBa,Internalising,CBCL,5-6
+MoBa,Externalising,CBCL,1-2
+MoBa,Externalising,CBCL,3-4
+MoBa,Externalising,CBCL,5-6
+RAINE,Internalising,CBCL,4-5
+RAINE,Internalising,CBCL,8-9
+RAINE,Internalising,CBCL,9-10
+RAINE,Internalising,CBCL,12-14
+RAINE,Internalising,CBCL,16-18
+RAINE,Externalising,CBCL,4-5
+RAINE,Externalising,CBCL,8-9
+RAINE,Externalising,CBCL,9-10
+RAINE,Externalising,CBCL,12-14
+RAINE,Externalising,CBCL,16-18
+ALSPAC,Internalising,SMFQ,9-10
+ALSPAC,Internalising,SMFQ,10-12
+ALSPAC,Internalising,SMFQ,12-14
+ALSPAC,Internalising,SMFQ,14-16
+ALSPAC,Internalising,SMFQ,16-18
+ALSPAC,Internalising,SMFQ,18-20
+ALSPAC,Internalising,SMFQ,20-25
+CHOP,Internalising,SDQ,5-6
+CHOP,Internalising,SDQ,10-12
+CHOP,Externalising,SDQ,5-6
+CHOP,Externalising,SDQ,10-12
+DNBC,Internalising,SDQ,8-9
+DNBC,Internalising,SDQ,10-12
+DNBC,Internalising,SDQ,18-20
+DNBC,Externalising,SDQ,8-9
+DNBC,Externalising,SDQ,10-12
+DNBC,Externalising,SDQ,18-20
+ELFE,Internalising,SDQ,3-4
+ELFE,Internalising,SDQ,5-6
+ELFE,Externalising,SDQ,3-4
+ELFE,Externalising,SDQ,5-6
+GECKO,Internalising,SDQ,5-6
+GECKO,Internalising,SDQ,10-12
+GECKO,Externalising,SDQ,5-6
+GECKO,Externalising,SDQ,10-12
+INMA,Internalising,SDQ,5-6
+INMA,Internalising,SDQ,7-8
+INMA,Internalising,SDQ,10-12
+INMA,Externalising,SDQ,5-6
+INMA,Externalising,SDQ,7-8
+INMA,Externalising,SDQ,10-12
+MoBa,Internalising,SDQ,3-4
+MoBa,Internalising,SDQ,8-9
+MoBa,Externalising,SDQ,3-4
+MoBa,Externalising,SDQ,8-9
+ALSPAC,Internalising,SDQ,4-5
+ALSPAC,Internalising,SDQ,9-10
+ALSPAC,Internalising,SDQ,10-1
+ALSPAC,Internalising,SDQ,12-14
+ALSPAC,Internalising,SDQ,14-16
+ALSPAC,Externalising,SDQ,4-5
+ALSPAC,Externalising,SDQ,9-10
+ALSPAC,Externalising,SDQ,10-12
+ALSPAC,Externalising,SDQ,12-14
+ALSPAC,Externalising,SDQ,14-16
+RAINE,Language,Australian Developmental Record,0-1
+RAINE,Language,Australian Developmental Record,1-2
+RAINE,Language,Bayley scales of infant development,0-1
+RAINE,Language,Bayley scales of infant development,1-2
+MoBa,Language,Språk20,5-6
+MoBa,Language,Språk20,8-9
+MoBa,Language,CCC-2,5-6
+MoBa,Language,CCC-2,8-9
+RAINE,Language,STYCAR,0-1
+RAINE,Language,STYCAR,1-2
+ALSPAC,Language,Denver,0-1
+ALSPAC,Language,Denver,1-2
+ALSPAC,Language,Denver,2-3
+ALSPAC,Language,Denver,4-5
+ALSPAC,Language,Denver,5-6
+ALSPAC,Language,Denver,6-7
+RAINE,Language,Denver,0-1
+RAINE,Language,Denver,1-2
+RAINE,Language,Denver,2-3
+MoBa,Language,ELVS,5-6
+MoBa,Language,ELVS,8-9
+RAINE,Language,ELM,0-1
+RAINE,Language,ELM,1-2
+RAINE,Language,ELM,2-3
+RAINE,Language,Gessell,0-1
+RAINE,Language,Gessell,1-2
+RAINE,Language,Griffiths,0-1
+RAINE,Language,Griffiths,1-2
+RAINE,Language,HELP,0-1
+RAINE,Language,HELP,1-2
+NFBC1966,Language,Unnamed,0-1
+NFBC1966,Language,Unnamed,1-2
+NFBC1966,Language,Unnamed,2-3
+NFBC1966,Language,Unnamed,3-4
+NFBC1966,Language,Unnamed,4-5
+NFBC1966,Language,Unnamed,5-6
+ALSPAC,Language,MacArthur,0-1
+ALSPAC,Language,MacArthur,1-2
+ALSPAC,Language,MacArthur,3-4
+ALSPAC,Language,MacArthur,6-7
+ELFE,Language,MacArthur,1-2
+ELFE,Language,MacArthur,2-3
+ALSPAC,Language,Non-word,5-6
+ALSPAC,Language,Non-word,8-9
+RAINE,Language,Peabody,5-6
+RAINE,Language,Peabody,9-10
+ALSPAC,Language,Reynell,1-2
+ALSPAC,Language,Reynell,2-3
+ALSPAC,Language,Reynell,5-6
+INMA,Language,SVF,7-8
+INMA,Language,SVF,8-9
+RAINE,Language,Woodside,0-1
+RAINE,Language,Woodside,1-2
+MoBa,Executive function,Ages & stages questionnaire,0-1
+MoBa,Executive function,Ages & stages questionnaire,1-2
+MoBa,Executive function,Ages & stages questionnaire,3-4
+MoBa,Executive function,Ages & stages questionnaire,5-6
+RAINE,Executive function,Ages & stages questionnaire,0-1
+RAINE,Executive function,Ages & stages questionnaire,1-2
+RAINE,Executive function,Ages & stages questionnaire,3-4
+EDEN,Executive function,Ages & stages questionnaire,3-4
+EDEN,Executive function,Ages & stages questionnaire,4-5
+INMA,Executive function,ANT,7-8
+INMA,Executive function,ANT,9-10
+INMA,Executive function,ANT,10-12
+ALSPAC,Executive function,TEACH,8-9
+ALSPAC,Executive function,TEACH,10-12
+INMA,Executive function,TRAIL,7-8
+INMA,Executive function,TRAIL,9-10
+INMA,Executive function,TRAIL,10-12
+ALSPAC,Memory,DST,4-5
+ALSPAC,Memory,DST,5-6
+ALSPAC,Memory,Non-word,5-6
+ALSPAC,Memory,Non-word,8-9
+INMA,Memory,Working memory test,7-8
+INMA,Memory,Working memory test,9-12
+INMA,Memory,Working memory test,10-12
+ALSPAC,Respiratory,FEV-1,8-9
+ALSPAC,Respiratory,FEV-1,14-16
+GEN-R,Respiratory,FEV-1,9-10
+GEN-R,Respiratory,FEV-1,12-14
+RHEA,Respiratory,FEV-1,4-5
+RHEA,Respiratory,FEV-1,6-7
+RAINE,Respiratory,FEV-1,5-6
+RAINE,Respiratory,FEV-1,8-9
+RAINE,Respiratory,FEV-1,12-14
+RAINE,Respiratory,FEV-1,20-25
+INMA,Respiratory,FEV-1,4-5
+INMA,Respiratory,FEV-1,7-8
+INMA,Respiratory,FEV-1,10-12
+INMA,Respiratory,FEV-1,14-16
+ALSPAC,Blood pressure,Peripheral,3-4
+ALSPAC,Blood pressure,Peripheral,4-5
+ALSPAC,Blood pressure,Peripheral,5-6
+ALSPAC,Blood pressure,Peripheral,7-8
+ALSPAC,Blood pressure,Peripheral,10-12
+ALSPAC,Blood pressure,Peripheral,12-14
+ALSPAC,Blood pressure,Peripheral,14-16
+ALSPAC,Blood pressure,Peripheral,16-18
+ALSPAC,Blood pressure,Peripheral,25-30
+BiB,Blood pressure,Peripheral,4-5
+BiB,Blood pressure,Peripheral,6-7
+EDEN,Blood pressure,Peripheral,3-4
+EDEN,Blood pressure,Peripheral,5-6
+SWS,Blood pressure,Peripheral,3-4
+SWS,Blood pressure,Peripheral,8-9
+RHEA,Blood pressure,Peripheral,4-5
+RHEA,Blood pressure,Peripheral,6-7
+GECKO,Blood pressure,Peripheral,2-3
+GECKO,Blood pressure,Peripheral,5-6
+GECKO,Blood pressure,Peripheral,10-12
+CHOP,Blood pressure,Peripheral,3-4
+CHOP,Blood pressure,Peripheral,4-5
+CHOP,Blood pressure,Peripheral,5-6
+CHOP,Blood pressure,Peripheral,6-7
+CHOP,Blood pressure,Peripheral,7-8
+CHOP,Blood pressure,Peripheral,8-9
+CHOP,Blood pressure,Peripheral,10-12
+INMA,Blood pressure,Peripheral,4-5
+INMA,Blood pressure,Peripheral,7-8
+INMA,Blood pressure,Peripheral,9-10
+ALSPAC,Height,,
+BiB,Height,,
+CHOP,Height,,
+DNBC,Height,,
+EDEN,Height,,
+ELFE,Height,,
+GECKO,Height,,
+GEN-R,Height,,
+INMA,Height,,
+MoBa,Height,,
+NFBC1966,Height,,
+NFBC1986,Height,,
+RAINE,Height,,
+RHEA,Height,,
+SWS,Height,,
+ALSPAC,Weight,,
+BiB,Weight,,
+CHOP,Weight,,
+DNBC,Weight,,
+EDEN,Weight,,
+ELFE,Weight,,
+GECKO,Weight,,
+GEN-R,Weight,,
+INMA,Weight,,
+MoBa,Weight,,
+NFBC1966,Weight,,
+NFBC1986,Weight,,
+RAINE,Weight,,
+RHEA,Weight,,
+SWS,Weight,,

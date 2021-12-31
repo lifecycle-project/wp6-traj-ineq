@@ -191,6 +191,17 @@
 	},
 	"buffers":
 	[
+		{
+			"contents": "################################################################################\n## Project: useful-code-r\n## Script purpose: Just to keep a track of all the packages I've installed - sometimes this has been lost when I update R.\n## Date: 4th February 2019\n## Author: Tim Cadman\n## Email: t.cadman@bristol.ac.uk\n################################################################################\n\n# Remember to set the library paths as per this thread:\n\n# https://stackoverflow.com/questions/15170399/change-r-default-library-path-using-libpaths-in-rprofile-site-fails-to-work\n\n################################################################################\n# 2. List of packages I ever use  \n################################################################################\n\ninstall.packages(\"extrafont\")\ninstall.packages(\"ggplot2\")\ninstall.packages(\"plyr\")\ninstall.packages(\"Cairo\")\ninstall.packages(\"dplyr\")\ninstall.packages(\"FactoMineR\")\ninstall.packages(\"mirt\")\ninstall.packages(\"ltm\")\ninstall.packages(\"gridExtra\")\ninstall.packages(\"latticeExtra\")\ninstall.packages(\"psych\")\ninstall.packages(\"rlang\")\ninstall.packages(\"devtools\")\ninstall.packages(\"Rtools\")\nlibrary(devtools)\ninstall_github(\"explodecomputer/alspac\")\ninstall.packages(\"lavaan\", repos = \"http://www.da.ugent.be\", type = \"source\")\ndevtools::install_github(\"simsem/semTools/semTools\")\ninstall.packages(\"semPlot\")\ninstall.packages(\"knitr\")\ninstall.packages(\"rmarkdown\")\ninstall.packages(\"installr\")\ninstall.packages(\"kableExtra\")\ninstall.packages(\"tinytex\")\ninstall.packages(\"extrafont\")\ninstall.packages(\"tableone\")\ninstall.packages(\"VIM\")\ninstall.packages(\"visdat\")\ninstall.packages(\"magrittr\")\ninstall.packages(\"qwraps2\")\ninstall.packages(\"effects\")\ninstall.packages(\"R2MLwiN\")\ninstall.packages(\"bookdown\")\ninstall.packages(\"languageserver\")\ninstall.packages(\"cairoDevice\")\ninstall.packages(\"installr\")\ninstall.packages(\"polycor\")\ninstall.packages(\"GPArotation\")\ninstall.packages(\"purrr\")\ninstall.packages(\"mice\")\ninstall.packages(\"captioner\")\ninstall.packages(\"qqtest\")\ninstall.packages(\"showtext\")\ninstall.packages(\"tidygraph\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggraph\")\ninstall.packages(\"QuantPsyc\")\ninstall.packages(\"rms\")\ninstall.packages(\"broom\")\ninstall.packages(\"rlang\")\ninstall.packages(\"skimr\")\ninstall.packages(\"mdscore\")\ninstall.packages(\"stringr\")\ninstall.packages(\"statar\")\ninstall.packages(\"summarytools\")\ninstall.packages(\"labelled\")\ninstall.packages(\"lspline\")\ninstall.packages(\"lifecycleProject\", \n\trepos='https://registry.molgenis.org/repository/R/', \n\tdependencies = TRUE)\ninstall.packages(\"metafor\")\ninstall.packages(\"miceadds\")\ninstall.packages(\"zscorer\")\ninstall.packages(\"gsubfn\")\ninstall.packages(\"PHEindicatormethods\")\ninstall.packages(\"sjmisc\")\ndevtools::install_github(\"thlytras/rspiro\")\ninstall.packages(\"igraph\")\ninstall.packages(\"ggraph\")\n\n\n################################################################################\n# 3. Import and register fonts  \n################################################################################\n\nlibrary(extrafont)\nfont_import()\nloadfonts(device=\"win\")\n",
+			"file": "/Users/timcadman/OneDrive - University of Bristol/repos/useful-code-r/code/useful-code-r-packages.r",
+			"file_size": 3478,
+			"file_write_time": 132457578830000000,
+			"settings":
+			{
+				"buffer_size": 3105,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -304,8 +315,8 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/timca/OneDrive - University of Bristol/repos/lc-trajectories-inequality",
-		"/C/Users/timca/OneDrive - University of Bristol/repos/lc-trajectories-inequality/code"
+		"/Users/timcadman/OneDrive - University of Bristol/repos/useful-code-r",
+		"/Users/timcadman/OneDrive - University of Bristol/repos/useful-code-r/code"
 	],
 	"file_history":
 	[
@@ -440,7 +451,7 @@
 	],
 	"find":
 	{
-		"height": 28.0
+		"height": 24.0
 	},
 	"find_in_files":
 	{
@@ -577,8 +588,37 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/Users/timcadman/OneDrive - University of Bristol/repos/useful-code-r/code/useful-code-r-packages.r",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3105,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2850,
+								2850
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -589,7 +629,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 28.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -649,7 +689,7 @@
 	"project": "lc-traj-ineq.sublime-project",
 	"replace":
 	{
-		"height": 52.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":
