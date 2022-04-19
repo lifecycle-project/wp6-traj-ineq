@@ -1,30 +1,27 @@
 ################################################################################
 ## Project: wp6-traj-ineq
-## Script purpose: Visualise available data   
-## Date: 19th June 2020
+## Script purpose: Define available cohorts
+## Date: 15th March 2022
 ## Author: Tim Cadman
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
-library(remotes)
-install_github("lifecycle-project/dsHelper")
-library(dsHelper)
 
-remove.packages("dsHelper")
-
-conns <- datashield.login(logindata, restore = "mhtraj_9")
-
-## Main analysis: keep everyone with >= 2 measurements
-## Sensitivity: compare (i) restricting to >= 3, (ii) restrict to same measure
-## at all time points
-
+conns <- datashield.login(logindata, restore = "mhtraj_10")
+################################################################################
+# 1. Helper function
+################################################################################
 cohAvail <- function(stats, var){
   stats %>%
     dplyr::filter(variable == var & !is.na(mean) & cohort != "combined") %>%
     pull(cohort) %>%
     as.character()
 }
+
 ################################################################################
-# 1. Internalising  
+# Identify available cohorts
+################################################################################
+################################################################################
+# 2. Internalising
 ################################################################################
 avail_int <- dh.getStats(
   df = "analysis_df",
@@ -32,16 +29,22 @@ avail_int <- dh.getStats(
 )
 
 int_coh_any <- avail_int$continuous %>% cohAvail("int_pc_")
-  
-int_scatter <- ds.scatterPlot(
+
+int_scatter_1 <- ds.scatterPlot(
   x = "analysis_df$int_age_", 
   y = "analysis_df$int_pc_", 
-  datasources = conns[int_coh_any])
+  datasources = conns[int_coh_any[1:6]])
 
-int_coh <- int_coh_any[!int_coh_any %in% c("ninfea", "sws")]
+int_scatter_2 <- ds.scatterPlot(
+  x = "analysis_df$int_age_", 
+  y = "analysis_df$int_pc_", 
+  datasources = conns[int_coh_any[7:13]])
+
+
+int_coh <- int_coh_any[!int_coh_any %in% c("ninfea", "sws", "elfe")]
 
 ################################################################################
-# 2. Externalising  
+# 3. Externalising  
 ################################################################################
 avail_ext <- dh.getStats(
   df = "analysis_df",
@@ -50,14 +53,20 @@ avail_ext <- dh.getStats(
 
 ext_coh_any <- avail_ext$continuous %>% cohAvail("ext_pc_")
 
-ext_scatter <- ds.scatterPlot(
+ext_scatter_1 <- ds.scatterPlot(
   x = "analysis_df$ext_age_", 
   y = "analysis_df$ext_pc_", 
-  datasources = conns[ext_coh_any])
+  datasources = conns[ext_coh_any[1:6]])
 
-ext_coh <- ext_coh_any[!ext_coh_any %in% c("ninfea", "sws")]
+ext_scatter_2 <- ds.scatterPlot(
+  x = "analysis_df$ext_age_", 
+  y = "analysis_df$ext_pc_", 
+  datasources = conns[ext_coh_any[7:13]])
+
+ext_coh <- ext_coh_any[!ext_coh_any %in% c("ninfea", "sws", "elfe")]
+
 ################################################################################
-# 3. ADHD  
+# 4. ADHD  
 ################################################################################
 avail_adhd <- dh.getStats(
   df = "analysis_df",
@@ -66,16 +75,15 @@ avail_adhd <- dh.getStats(
 
 adhd_coh_any <- avail_adhd$continuous %>% cohAvail("adhd_pc_")
 
-adhd_scatter <- ds.scatterPlot(
+adhd_scatter_1 <- ds.scatterPlot(
   x = "analysis_df$adhd_age_", 
   y = "analysis_df$adhd_pc_", 
-  datasources = conns[adhd_coh_any])
+  datasources = conns[adhd_coh_any[1:6]])
 
-adhd_scatter <- ds.scatterPlot(
+adhd_scatter_2 <- ds.scatterPlot(
   x = "analysis_df$adhd_age_", 
   y = "analysis_df$adhd_pc_", 
-  datasources = conns[adhd_coh_any])
-
+  datasources = conns[adhd_coh_any[7:11]])
 
 adhd_coh <- adhd_coh_any[!adhd_coh_any %in% c("genr")]
 
@@ -84,8 +92,7 @@ adhd_coh <- adhd_coh_any[!adhd_coh_any %in% c("genr")]
 ################################################################################
 avail_asd <- dh.getStats(
   df = "analysis_df",
-  vars = c("asd_pc_", "asd_raw_", "asd_instr_"),
-  conns = conns[names(conns) != "dnbc"]
+  vars = c("asd_pc_", "asd_raw_", "asd_instr_")
 )
 
 asd_coh_any <- avail_asd$continuous %>% cohAvail("asd_pc_")
@@ -102,8 +109,7 @@ asd_coh <- c("elfe", "inma", "moba")
 ################################################################################
 avail_lan <- dh.getStats(
   df = "analysis_df",
-  vars = c("lan_pc_", "lan_raw_", "lan_instr_"), 
-  conns = conns[names(conns) != "dnbc"]
+  vars = c("lan_pc_", "lan_raw_", "lan_instr_")
 )
 
 lan_coh_any <- avail_lan$continuous %>% cohAvail("lan_pc_")
@@ -115,14 +121,12 @@ lan_scatter <- ds.scatterPlot(
 
 lan_coh <- c("alspac", "inma", "rhea")
 
-
 ################################################################################
 # 6. NVI  
 ################################################################################
 avail_nvi <- dh.getStats(
   df = "analysis_df",
-  vars = c("nvi_pc_", "nvi_raw_", "nvi_instr_"), 
-  conns = conns[names(conns) != "dnbc"]
+  vars = c("nvi_pc_", "nvi_raw_", "nvi_instr_")
 )
 
 nvi_coh_any <- avail_nvi$continuous %>% cohAvail("nvi_pc_")
@@ -134,5 +138,4 @@ nvi_scatter <- ds.scatterPlot(
 
 nvi_coh <- c("alspac", "inma", "rhea")
 
-
-
+save.image()

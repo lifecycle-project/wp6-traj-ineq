@@ -8,7 +8,16 @@
 
 library(dsHelper)
 
-conns <- datashield.login(logindata, restore = "mhtraj_9")
+
+
+ds.ls()
+
+
+ds.mean
+
+library(dsHelper)
+dh.getStats
+
 ################################################################################
 # ADHD  
 ################################################################################
@@ -105,5 +114,22 @@ nvi.fit <- dh.lmeMultPoly(
 # Final models  
 ################################################################################
 
+ext_lin.fit <- ds.lmerSLMA(
+  dataName = "analysis_df",
+  formula = "ext_pc_ ~ 1 + edu_rank_num + ext_age_ + sex + (1|child_id_int)",
+  datasources = conns[c("alspac", "moba")])
 
+newdata <- tibble(
+  edu_rank_num = rep(c(1, 2), 50), 
+  ext_age_ = seq(1, 100, 1), 
+  sex2 = rep(c(1, 2), 50)
+)
+
+test <- dh.predictLmer(
+  model = ext_lin.fit, 
+  new_data = newdata, 
+  coh_names = c("alspac", "moba"))
+
+
+ext_lin.fit
 

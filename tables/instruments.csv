@@ -1,0 +1,13 @@
+cohort,ext_instr_,int_instr_,adhd_instr_,asd_instr_,lan_instr_,nvi_instr_
+alspac,SDQ,SDQ,SDQ,,DDST,"WISC, WPSSI"
+bib,SDQ,SDQ,,,BVPS,
+chop,"SDQ, CBCL","SDQ, CBCL",SDQ,,NEPSY-II,CFIT
+dnbc,SDQ,SDQ,SDQ,,,
+eden,SDQ,SDQ,SDQ,ADBB,,
+elfe,SDQ,SDQ,SDQ,M-CHAT,,
+genr,CBCL,CBCL,CPRS-R,SRS,MCDI,SON-R
+inma,"SDQ, CBCL","SDQ, CBCL","CPRS-R, DISC-IV/DSM",CAST,"MSCA, SVF","MSCA, RPM"
+moba,CBCL,CBCL,"DISC-IV/DSM, CBCL","M-CHAT, CAST, SCQ",,
+ninfea,SDQ,SDQ,"SDQ, DISC-IV/DSM",,DDST,
+raine,"CBCL, YSR","CBCL, YSR",CBCL,,,"RPM, ASQ"
+rhea,"SDQ, CBCL","SDQ, CBCL","SDQ, CPRS-R",,"MSCA, BSID, WISC","WISC, MSCA, RPM, BSID"

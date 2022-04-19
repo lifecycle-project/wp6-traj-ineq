@@ -6,6 +6,7 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
+de <- function(){datashield.errors()}
 ################################################################################
 # 1. Define variables and tables
 ################################################################################
@@ -57,15 +58,15 @@ cohorts_tables <- bind_rows(
   tibble(
     conn_name = "eden",
     table = c(
-      "lc_eden_core_2_1.Project1_WP6_non_rep",
-      "lc_eden_core_2_1.Project1_WP6_yearly_rep",
-      "lc_eden_outcome_1_1.Project1_WP6_yearly_rep")),
+      "project1-eden/2_1_core_1_0/non_rep",
+      "project1-eden/2_1_core_1_0/yearly_rep",
+      "project1-eden/1_1_outcome_1_0/yearly_rep")),
   tibble(
     conn_name = "elfe",
     table = c(
-      "lc_elfe_core_2_1.Project1_WP6_non_rep",
-      "lc_elfe_core_2_1.Project1_WP6_yearly_rep",
-      "lc_elfe_outcome_1_1.Project1_WP6_yearly_rep")),
+      "project1-elfe/2_1_core_1_0/non_rep",
+      "project1-elfe/2_1_core_1_0/yearly_rep",
+      "project1-elfe/1_1_outcome_1_0/yearly_rep")),
   tibble(
     conn_name = "genr",
     table = c(
@@ -121,7 +122,7 @@ cohorts_tables <- bind_rows(
 # 2. Assign variables
 ################################################################################
 cohorts_tables %>%
-  dplyr::filter(conn_name == "moba") %>%
+  dplyr::filter(conn_name %in% c("eden", "elfe", "alspac", "inma", "rhea")) %>%
   pwalk(function(conn_name, table, type){
     
     datashield.assign(
@@ -357,7 +358,6 @@ ds.merge(
 datashield.workspace_save(conns, "mhtraj_6")
 conns <- datashield.login(logindata, restore = "mhtraj_6")
 
-
 ################################################################################
 # 7. Create different versions of id variable  
 ################################################################################
@@ -371,7 +371,7 @@ ds.asInteger("analysis_df$child_id", "child_id_int")
 ## ---- Merge back in ----------------------------------------------------------
 ds.dataFrame(
   x = c("analysis_df", "child_id_int"), 
-  newobj = "analysis_df"
+  newobj = "mh_df"
 )
 
 #"child_id_f"
@@ -382,33 +382,33 @@ conns <- datashield.login(logindata, restore = "mhtraj_7")
 ################################################################################
 # 8. Make polynomial transformations of age term
 ################################################################################
-
 agevars <- c("ext_age_", "int_age_", "adhd_age_", "asd_age_", "lan_age_", 
              "nvi_age_")
+
 ## ---- Add a small amount to the age term -------------------------------------
 agevars %>%
   map(function(x){
     
     ds.assign(
-      toAssign = paste0("analysis_df$", x, "+0.01"), 
+      toAssign = paste0("mh_df$", x, "+0.01"), 
       newobj = x)
   })
     
 dh.dropCols(
-  df = "analysis_df", 
+  df = "mh_df", 
   vars = agevars, 
   type = "remove", 
-  new_df_name = "analysis_df")
+  new_df_name = "mh_df")
 
 ds.dataFrame(
-  x = c("analysis_df", agevars), 
-  newobj = "analysis_df")
+  x = c("mh_df", agevars), 
+  newobj = "mh_df")
   
 ## ---- Normal age terms -------------------------------------------------------
 agevars%>%
   map(
     dh.makeAgePolys(
-      df = "analysis_df", 
+      df = "mh_df", 
       agevars = .,
       conns = conns)
   )
@@ -422,39 +422,75 @@ conns <- datashield.login(logindata, restore = "mhtraj_8")
 # 9. Fix factor variables  
 ################################################################################
 
-## ---- Define variables -------------------------------------------------------
-fact.var <- c("int_instr_", "ext_instr_", "adhd_instr_", "asd_instr_", 
-              "nvi_instr_", "lan_instr_")
-
-
 ## ---- Convert to factor ------------------------------------------------------
-fact.var %>%
+inst.vars %>%
   map(
     ~ds.asFactor(
-      input.var.name = paste0("analysis_df$", .), 
+      input.var.name = paste0("mh_df$", .), 
       newobj = .
     )
   )
 
 ## ---- Remove originals from dataframe ----------------------------------------
 dh.dropCols(
-  df = "analysis_df", 
-  vars = fact.var)
+  df = "mh_df", 
+  vars = fact.var, 
+  type = "remove")
 
 ## ---- Join fixed versions back in --------------------------------------------
 ds.dataFrame(
-  x = c("analysis_df", fact.var), 
-  newobj = "analysis_df"
+  x = c("mh_df", fact.var), 
+  newobj = "mh_df"
 )
-
 
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_9")
 conns <- datashield.login(logindata, restore = "mhtraj_9")
 
+################################################################################
+# Create analysis dataframe
+################################################################################
 
+## ---- Exposures --------------------------------------------------------------
+dh.defineCases(
+  df = "mh_df", 
+  vars = exp.vars, 
+  type = "any", 
+  new_obj = "any_exp"
+)
 
+## ---- Outcome ----------------------------------------------------------------
+dh.defineCases(
+  df = "mh_df", 
+  vars = out.vars, 
+  type = "any", 
+  new_obj = "any_out"
+)
 
+## ---- At least one of each ---------------------------------------------------
+ds.make(
+  toAssign = "any_exp+any_out", 
+  newobj = "n_complete")
+
+ds.Boole(
+  V1 = "n_complete", 
+  V2 = "2", 
+  Boolean.operator = "==", 
+  na.assign = 0, 
+  newobj = "some_vars")
+
+## ---- Create subset ----------------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "mh_df", 
+  V1.name = "some_vars", 
+  V2.name = "1", 
+  Boolean.operator = "==", 
+  keep.NAs = FALSE, 
+  newobj = "analysis_df")
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_10")
+conns <- datashield.login(logindata, restore = "mhtraj_10")
 
 
 
@@ -562,66 +598,4 @@ datashield.workspace_save(conns, "mhtraj_9")
 conns <- datashield.login(logindata, restore = "mhtraj_9")
 
 
-################################################################################
-# 11. Visualise data  
-################################################################################
-
-## I think the only way to work out how many measurement occasions there are
-## currently is to look at the data. Once tapplyassign is fixed it should be 
-## possible to get summary data.
-
-## ---- Full dataset externalising ---------------------------------------------
-ds.scatterPlot(
-  x = "analysis_df$ext_age_", 
-  y = "analysis_df$ext_pc_", 
-  datasources = conns)
-
-## ---- Full dataset internalising ---------------------------------------------
-ds.scatterPlot(
-  x = "analysis_df$int_age_", 
-  y = "analysis_df$int_pc_", 
-  datasources = conns)
-
-## ---- Externalising CBCL -----------------------------------------------------
-ds.scatterPlot(
-  x = "ext_cbcl_sub$ext_age_", 
-  y = "ext_cbcl_sub$ext_raw_", 
-  datasources = conns[ext_cbcl_tmp])
-
-## ---- Externalising SDQ ------------------------------------------------------
-ds.scatterPlot(
-  x = "ext_sdq_sub$ext_age_", 
-  y = "ext_sdq_sub$ext_raw_", 
-  datasources = conns[ext_sdq_tmp])
-
-## ---- Internalising CBCL -----------------------------------------------------
-ds.scatterPlot(
-  x = "int_cbcl_sub$ext_age_", 
-  y = "int_cbcl_sub$ext_raw_", 
-  datasources = conns[int_cbcl_tmp])
-
-## ---- Internalising SDQ ------------------------------------------------------
-ds.scatterPlot(
-  x = "int_sdq_sub$int_age_", 
-  y = "int_sdq_sub$int_raw_", 
-  datasources = conns[int_sdq_tmp])
-
-################################################################################
-# 12. Define final cohort vectors  
-################################################################################
-
-## At the moment this has to be done manually based on inspecting the scatter 
-## plot
-
-#ext_cbcl_coh <- c("moba", "raine")
-#ext_sdq_coh <- "dnbc"
-#int_cbcl_coh <- c("moba", "raine")
-#int_sdq_coh <- "dnbc"
-
-
-################################################################################
-# 13. Save progress  
-################################################################################
-datashield.workspace_save(conns, "mhtraj_10")
-conns <- datashield.login(logindata, restore = "mhtraj_10")
 
