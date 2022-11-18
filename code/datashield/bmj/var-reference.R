@@ -7,79 +7,116 @@
 ################################################################################
 
 source("https://raw.githubusercontent.com/timcadman/useful-code-r/master/code/themes/lc-names-neat.R")
+
+names_neat <- names_neat %>%
+  dplyr::rename(coh_label = cohort_neat)
+
 ################################################################################
 # 1. Create vectors of variables
 ################################################################################
 
 ## ---- Exposures --------------------------------------------------------------
-exp.vars <- c("edu_rank_num")
-
-exp.names <- c()
+exp.vars <- c("edu_rank_num", "eusilc_income_quintiles")
+exp.names <- c("Maternal Education", "Disposable Income")
 
 ## ---- Outcomes ---------------------------------------------------------------
 out.vars <- c("int_pc_", "ext_pc_", "adhd_pc_", "asd_pc_", "lan_pc_", "nvi_pc_")
+out.names <- c("Internalising (percentiles)", "Externalising (percentiles)", 
+               "ADHD (percentiles)", "ASD (percentiles)", 
+               "Language (percentiles)", 
+               "Non-verbal Intelligence (percentiles)")
+
 
 ## ---- Instruments ------------------------------------------------------------
 inst.vars <- c("int_instr_", "ext_instr_", "adhd_instr_", "asd_instr_", 
                "nvi_instr_", "lan_instr_")
+inst.names <- c("Internalising instrument", "Externalising instrument", 
+                "ADHD instrument", "ASD instrument", 
+                "Non-Verbal Intelligence instrument", "Language instrument")
 
 instr.vals <- tribble(
-  ~category, ~instrument, 
-  "47", "SDQ",
-  "20", "CPRS-R",
-  "25", "DISC-IV/DSM",
-  "13", "CBCL",
-  "1", "ADBB",
-  "37", "M-CHAT",
-  "50", "SRS",
-  "12", "CAST",
-  "46", "SCQ",
-  "61", "YSR",
-  "24", "DDST",
-  "9", "BVPS",
-  "41", "NEPSY-II",
-  "36", "MCDI",
-  "39", "MSCA",
-  "52", "SVF",
-  "10", "BSID",
-  "59", "WISC",
-  "60", "WPSSI",
-  "17", "CFIT",
-  "49", "SON-R",
-  "45", "RPM",
-  "4", "ASQ")
+  ~category, ~instrument, ~full_name,
+  "47", "SDQ", "Strengths and Difficulties Questionnaire",
+  "20", "CPRS-R", "Conners' Parenting Rating Scale - Revised",
+  "25", "DISC-IV/DSM", "Diagnostic Interview Schedule for Children",
+  "13", "CBCL", "Child Behaviour Checklist",
+  "1", "ADBB", "Alarm Distress Baby Scale",
+  "37", "M-CHAT", "Modified Checklist for Autism in Toddlers - Revised",
+  "50", "SRS", "Social Responsiveness Scale",
+  "12", "CAST", "Childhood Autism Spectrum Test",
+  "46", "SCQ", "Social Communication Questionnaire",
+  "61", "YSR", "Youth Self-Report",
+  "24", "DDST", "Denver Developmental Screening Test",
+  "9", "BVPS", "British Picture Vocabulary Scale",
+  "41", "NEPSY-II", "A Developmental NEuroPSYchological Assessment - II",
+  "36", "MCDI", "MacArthur-Bates Communicative Development Inventories",
+  "39", "MSCA", "McCarthy Scales of Children's Abilities",
+  "52", "SVF", "Stress Coping Style Questionnaire",
+  "10", "BSID", "Bayley Scales Of Infant and Toddler Development",
+  "59", "WISC", "Wechsler Intelligence Scale for Children",
+  "60", "WPSSI", "Wechsler Preschool & Primary Scale of Intelligence",
+  "17", "CFIT", "Cattell Culture Fair Intelligence Test",
+  "49", "SON-R", "Snijders-Oomen Nonverbal Intelligence Tests",
+  "45", "RPM", "Raven's Progressive Matrices",
+  "4", "ASQ", "Ages and Stages Questionnaire")
+
+## ---- Ages -------------------------------------------------------------------
+age.vars <- c("int_age_", "ext_age_", "adhd_age_", "asd_age_", 
+               "nvi_age_", "lan_age_")
+age.names <- c("Internalising age at measurement", 
+                "Externalising age at measurement", 
+                "ADHD age at measurement", "ASD age at measurement", 
+                "Non-Verbal Intelligence age at measurement", 
+                "Language age at measurement")
 
 
 ## ---- Covariates -------------------------------------------------------------
-cov.vars <- c(
-  "edu_m_0", "eusilc_income_quintiles", "areases_tert", "ethn3_m", 
-  "parity_bin", "sex", "prepreg_psych", "preg_dia", "preg_ht", 
-  "birth_month_f", "birth_year_f", "mat_age_f", "preterm", "cohab")
+cov.vars <- c("ethn3_m", "agebirth_m_y", "sex")
+cov.names <- c("Maternal ethnicity", "Maternal age at birth", "Child sex")
 
-cov.names <- c(
-  "Maternal education", "Income", "Area deprivation", "Maternal ethnicity",
-  "Parity", "Child sex", "Maternal pre-pregnancy psychiatric conditions",
-  "Gestational diabetes", "Pregnancy hypertension", "Birth season", 
-  "Birth year", "Maternal age at birth", "Pre-term birth", 
-  "Maternal cohabitation at birth")
+wide.vars <- c(exp.vars, cov.vars)
 
-cov_analysis.vars <- c("birth_month", "birth_year")
+wide.ref <- tibble(
+  variable = wide.vars, 
+  var_label = c(exp.names, cov.names))
 
+long.vars <- c(out.vars, inst.vars, age.vars)
 
-## ---- Outcome ----------------------------------------------------------------
-out.vars <- "ppd"
+long.ref <- tibble(
+  variable = long.vars,
+  var_label = c(out.names, inst.names, age.names))
 
-out.names <- "Postpartum depression"
+all.vars <- c(wide.vars, long.vars)
+all.ref <- bind_rows(wide.ref, long.ref)
 
+cat.ref <- tibble(
+  variable = c(
+    rep("edu_rank_num", 3), 
+    rep("eusilc_income_quintiles", 5),
+    rep(inst.vars, each = 23), 
+    rep("ethn3_m", 3), 
+    rep("sex", 2)), 
+  category = c(
+    seq(1, 3, 1),
+    seq(1, 5, 1),
+    rep(instr.vals$category, 6),
+    seq(1, 3, 1),
+    c(1, 2)),
+  cat_label = c(
+    c("Low", "Medium", "High"), 
+    c("1st quintile", "2nd quintile", "3rd quintile", "4th quintile", 
+      "5th quintile"), 
+    rep(instr.vals$full_name, 6),
+    c("Western", "Non-western", "Mixed"),
+    c("Male", "Female"))
+  )
+    
+    c(exp.vars)
+  
+  
+)
 
-## ---- Meta variables ---------------------------------------------------------
-meta.vars <- c(ref_codes$dummy, "child_no", "outcome", "child_id")
-
-meta.names <- c(
-  "alspac_dummy", "bib_dummy", "dnbc_dummy", "genr_dummy", "moba_dummy", 
-  "ninfea_dummy", "rhea_dummy", "eden_nancy_dummy", "eden_poitiers dummy", 
-  "inma_gip_dummy", "inma_sabadell dummy", "Child number", "Birth outcome", 
-  "Child identifier")
+nrow(instr.vals)
 
 ################################################################################
 # 2. Create reference tables

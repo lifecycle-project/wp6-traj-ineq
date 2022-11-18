@@ -6,14 +6,13 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
-de <- function(){datashield.errors()}
 ################################################################################
 # 1. Define variables and tables
 ################################################################################
 
 ## ---- Non-repeated -----------------------------------------------------------
 nonrep.vars <- c("child_id", "sex", "coh_country", "cohort_id", "eusilc_income",
-                 "eusilc_income_quintiles", "agebirth_m_y")
+                 "eusilc_income_quintiles", "agebirth_m_y", "ethn3_m")
 
 ## ---- Yearly repeated --------------------------------------------------------
 yearrep.vars <- c("child_id", "edu_m_", "age_years")
@@ -46,9 +45,9 @@ cohorts_tables <- bind_rows(
   tibble(
     conn_name = "chop",
     table = c(
-      "lc_chop_core_2_1.2_1_core_non_rep_bmi_earlylife_poc",
-      "lc_chop_core_2_1.2_1_core_yearly_rep_mh_traj",
-      "lc_chop_outcome_1_1.1_1_outcome_yearly_rep_mh_traj")),
+      "mhtraj/2_2_core_1_0/non_rep",
+      "mhtraj/2_2_core_1_0/yearly_rep",
+      "mhtraj/1_5_outcome_1_0/yearly_rep")),
   tibble(
     conn_name = "dnbc",
     table = c(
@@ -82,9 +81,9 @@ cohorts_tables <- bind_rows(
   tibble(
     conn_name = "moba",
     table = c(
-      "lc_moba_core_2_1.2_1_core_2021_7_non_rep_inequalities_MH_trajectories",
-      "lc_moba_outcome_1_1.1_1_outcome_2021_2_yearly_rep_inequalities_MH_trajectories",
-      "lc_moba_outcome_1_1.1_1_outcome_2021_2_yearly_rep_inequalities_MH_trajectories")),
+      "lc_moba_core_2_1.2_1_core_2022_3_non_rep_early_determinants_adiposity_new",
+      "lc_moba_core_2_1.2_1_core_2022_3_yearly_rep_inequalities_MH_trajectories_new",
+      "lc_moba_outcome_1_1.1_1_outcome_2022_3_yearly_rep_inequalities_MH_trajectories_new")),
   tibble(
     conn_name = "nfbc86",
     table = c(
@@ -122,7 +121,7 @@ cohorts_tables <- bind_rows(
 # 2. Assign variables
 ################################################################################
 cohorts_tables %>%
-  dplyr::filter(conn_name %in% c("eden", "elfe", "alspac", "inma", "rhea")) %>%
+  dplyr::filter(conn_name %in% "moba") %>%
   pwalk(function(conn_name, table, type){
     
     datashield.assign(
@@ -136,6 +135,7 @@ cohorts_tables %>%
 datashield.workspace_save(conns, "mhtraj_1")
 conns <- datashield.login(logindata, restore = "mhtraj_1")
 
+ds.colnames("nonrep")
 ################################################################################
 # 3. See what's there   
 ################################################################################
@@ -148,35 +148,7 @@ discrepancy <- list(
     df = "mhrep",
     vars = mhrep.vars))
 
-ds.asNumeric("nonrep$eusilc_income", "eusilc_income")
-
-ds.colnames("nonrep")
-
-dh.dropCols(
-  df = "nonrep", 
-  vars = "eusilc_income")
-
-ds.dataFrame(
-  x = c("nonrep", "eusilc_income"), 
-  newobj = "nonrep"
-)
-
-
-discrepancy$nonrep
-discrepancy$mhrep
-
-ds.levels("nonrep$sex")
-ds.levels("nonrep$coh_country")
-ds.levels("nonrep$cohort_id")
-
-
-ds.levels("nonrep$eusilc_income")
-
-ds.length("nonrep$eusilc_income")
-
-ds.levels("nonrep$agebirth_m_y")
-
-
+save.image()
 
 ################################################################################
 # 4. Sort out blank variables  
@@ -184,12 +156,23 @@ ds.levels("nonrep$agebirth_m_y")
 ds.dataFrameFill("nonrep", "nonrep")
 ds.dataFrameFill("mhrep", "mhrep")
 
-
-
-
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_2")
 conns <- datashield.login(logindata, restore = "mhtraj_2")
+
+################################################################################
+# 5. Check filled variables  
+################################################################################
+filled <- list(
+  nonrep = 
+    dh.classDiscrepancy(
+      df = "nonrep",
+      vars = nonrep.vars), 
+  mhrep = dh.classDiscrepancy(
+    df = "mhrep",
+    vars = mhrep.vars))
+
+save.image()
 
 ################################################################################
 # 4. Derive maternal education variable
@@ -218,7 +201,6 @@ dh.renameVars(
   current_names = "edu_m_.0", 
   new_names = "edu_m")
 
-
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_3")
 conns <- datashield.login(logindata, restore = "mhtraj_3")
@@ -227,14 +209,12 @@ conns <- datashield.login(logindata, restore = "mhtraj_3")
 # 5. Create rank maternal education variable  
 ################################################################################
 
-## ---- Get proporstions -------------------------------------------------------
+## ---- Get proportions -------------------------------------------------------
 mat_prop <- dh.getStats(
   df = "baseline_wide",
   vars = "edu_m",
   conns = conns
 )
-
-mat_prop$categorical %>% print(n = Inf)
 
 ## ---- Make tibble with values to assign --------------------------------------
 rank <- mat_prop$categorical %>%
@@ -332,6 +312,42 @@ conns <- datashield.login(logindata, restore = "mhtraj_4")
 #conns <- datashield.login(logindata, restore = "mhtraj_5")
 
 ################################################################################
+# 7. Create maternal ethnicity variable  
+################################################################################
+
+## ---- Identify cohorts -------------------------------------------------------
+eth_stats <- dh.getStats(
+  df = "nonrep", 
+  vars = "ethn3_m")
+
+eth_coh <- eth_stats$categorical %>% print(n = Inf)
+
+eth_coh <- eth_stats$categorical %>%
+  dplyr::filter(perc_missing < 100 & cohort != "combined") %>%
+  distinct(cohort) %>%
+  pull(cohort)
+  
+
+## ---- Collapse categories ----------------------------------------------------
+ds.recodeValues(
+  var.name = "nonrep$ethn3_m",
+  values2replace.vector = seq(1, 3, 1),
+  new.values.vector = c(1, 2, 2),
+  newobj = "eth_bin", 
+  datasources = conns[eth_coh])
+
+ds.table("eth_bin", useNA = "always", datasources = conns[eth_coh])
+
+ds.dataFrame(
+  c("nonrep", "eth_bin"), 
+  newobj = "nonrep", 
+  datasources = conns[eth_coh])
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_5")
+conns <- datashield.login(logindata, restore = "mhtraj_5")
+
+################################################################################
 # 6. Merge datasets  
 ################################################################################
 ds.merge(
@@ -341,18 +357,16 @@ ds.merge(
   by.y.names = "child_id",
   all.x = TRUE,
   all.y = TRUE,
-  newobj = "analysis_df"
-)
+  newobj = "mh_df")
 
 ds.merge(
-  x.name = "analysis_df", 
+  x.name = "mh_df", 
   y.name = "baseline_wide", 
   by.x.names = "child_id", 
   by.y.names = "child_id", 
   all.x = TRUE,
   all.y = TRUE,
-  newobj = "analysis_df"
-)
+  newobj = "mh_df")
 
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_6")
@@ -363,16 +377,15 @@ conns <- datashield.login(logindata, restore = "mhtraj_6")
 ################################################################################
 
 ## ---- Integer ----------------------------------------------------------------
-ds.asInteger("analysis_df$child_id", "child_id_int")
+ds.asInteger("mh_df$child_id", "child_id_int")
 
 ## ---- Factor -----------------------------------------------------------------
 #ds.asFactor("child_id_int", "child_id_fac")
 
 ## ---- Merge back in ----------------------------------------------------------
 ds.dataFrame(
-  x = c("analysis_df", "child_id_int"), 
-  newobj = "mh_df"
-)
+  x = c("mh_df", "child_id_int"), 
+  newobj = "mh_df")
 
 #"child_id_f"
 ## ---- Save progress ----------------------------------------------------------
@@ -398,74 +411,72 @@ dh.dropCols(
   df = "mh_df", 
   vars = agevars, 
   type = "remove", 
-  new_df_name = "mh_df")
+  new_obj = "mh_df")
 
 ds.dataFrame(
   x = c("mh_df", agevars), 
   newobj = "mh_df")
   
 ## ---- Normal age terms -------------------------------------------------------
-agevars%>%
+agevars %>%
   map(
-    dh.makeAgePolys(
+    ~dh.makeAgePolys(
       df = "mh_df", 
-      agevars = .,
-      conns = conns)
-  )
+      age_var = .,
+      conns = conns))
 
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_8")
 conns <- datashield.login(logindata, restore = "mhtraj_8")
 
-
 ################################################################################
-# 9. Fix factor variables  
+# Fix factor variables  
 ################################################################################
+instr.vars <- c("adhd_instr_", "ext_instr_", "int_instr_", "lan_instr_", 
+                "nvi_instr_", "asd_instr_")
 
-## ---- Convert to factor ------------------------------------------------------
-inst.vars %>%
-  map(
-    ~ds.asFactor(
-      input.var.name = paste0("mh_df$", .), 
-      newobj = .
-    )
-  )
-
-## ---- Remove originals from dataframe ----------------------------------------
-dh.dropCols(
-  df = "mh_df", 
-  vars = fact.var, 
-  type = "remove")
-
-## ---- Join fixed versions back in --------------------------------------------
-ds.dataFrame(
-  x = c("mh_df", fact.var), 
-  newobj = "mh_df"
-)
+dh.columnCast(
+  df = "mh_df",
+  target_vars = instr.vars, 
+  target_class = "factor")
 
 ## ---- Save progress ----------------------------------------------------------
 datashield.workspace_save(conns, "mhtraj_9")
 conns <- datashield.login(logindata, restore = "mhtraj_9")
 
 ################################################################################
-# Create analysis dataframe
+# Create wide format of original dataset  
+################################################################################
+ds.reShape(
+  data.name = "mh_df",
+  timevar.name = "age_years",
+  idvar.name = "child_id",
+  v.names = "ext_raw_",
+  direction = "wide", 
+  newobj = "mh_df_w")
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_10")
+conns <- datashield.login(logindata, restore = "mhtraj_10")
+
+################################################################################
+# Define cases with exposure and one outcome
 ################################################################################
 
 ## ---- Exposures --------------------------------------------------------------
 dh.defineCases(
   df = "mh_df", 
-  vars = exp.vars, 
+  vars = "edu_rank_num", 
   type = "any", 
-  new_obj = "any_exp"
-)
+  new_obj = "any_exp")
 
 ## ---- Outcome ----------------------------------------------------------------
 dh.defineCases(
   df = "mh_df", 
-  vars = out.vars, 
+  vars = c("adhd_raw_", "asd_raw_", "ext_raw_", "int_raw_", "lan_raw_", 
+           "nvi_raw_"), 
   type = "any", 
-  new_obj = "any_out"
-)
+  new_obj = "any_out")
 
 ## ---- At least one of each ---------------------------------------------------
 ds.make(
@@ -477,20 +488,270 @@ ds.Boole(
   V2 = "2", 
   Boolean.operator = "==", 
   na.assign = 0, 
-  newobj = "some_vars")
+  newobj = "exp_out")
 
-## ---- Create subset ----------------------------------------------------------
+## ---- Create long subset -----------------------------------------------------
 ds.dataFrameSubset(
   df.name = "mh_df", 
-  V1.name = "some_vars", 
+  V1.name = "exp_out", 
   V2.name = "1", 
   Boolean.operator = "==", 
   keep.NAs = FALSE, 
-  newobj = "analysis_df")
+  newobj = "exp_out_df_l")
+
+## ---- Create wide subset -----------------------------------------------------
+ds.reShape(
+  data.name = "exp_out_df_l",
+  timevar.name = "age_years",
+  idvar.name = "child_id",
+  v.names = "ext_raw_",
+  direction = "wide", 
+  newobj = "exp_out_df_w")
 
 ## ---- Save progress ----------------------------------------------------------
-datashield.workspace_save(conns, "mhtraj_10")
-conns <- datashield.login(logindata, restore = "mhtraj_10")
+datashield.workspace_save(conns, "mhtraj_11")
+conns <- datashield.login(logindata, restore = "mhtraj_11")
+
+################################################################################
+# Define cases with non-missing covariates  
+################################################################################
+dh.defineCases(
+  df = "exp_out_df_l", 
+  vars = "sex", 
+  type = "any", 
+  new_obj = "any_cov")
+
+## ---- Create long subset -----------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "exp_out_df_l", 
+  V1.name = "any_cov", 
+  V2.name = "1", 
+  Boolean.operator = "==", 
+  keep.NAs = FALSE, 
+  newobj = "analysis_df_l")
+
+## ---- Create wide subset -----------------------------------------------------
+ds.reShape(
+  data.name = "analysis_df_l",
+  timevar.name = "age_years",
+  idvar.name = "child_id",
+  v.names = "ext_raw_",
+  direction = "wide", 
+  newobj = "analysis_df_w")
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_12")
+conns <- datashield.login(logindata, restore = "mhtraj_12")
+
+################################################################################
+# Define excluded DFs  
+################################################################################
+dt.makeExcludedDf(
+  original_df = "mh_df_w", 
+  final_df = "analysis_df_w",
+  new_obj = "excluded_w")
+
+#dt.makeExcludedDf(
+#  original_df = "mh_df", 
+#  final_df = "analysis_df_l",
+#  new_obj = "excluded_l")
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_13")
+conns <- datashield.login(logindata, restore = "mhtraj_13")
+
+################################################################################
+# Make complete case subsets
+################################################################################
+out_stem <- c("int_", "ext_", "adhd_", "asd_", "nvi_", "lan_")
+exp_cov.vars <- c("child_id", "edu_rank_num", "sex")
+
+## ---- Define subsets ---------------------------------------------------------
+miss.ref <- tibble(
+  out_stem = out_stem,
+  outcome = paste0(out_stem, "raw_"), 
+  age_var = paste0(out_stem, "age_"), 
+  new_vec = paste0(out_stem, "valid"),
+  inc_long = paste0(out_stem, "sub_l_inc"),
+  inc_wide = paste0(out_stem, "sub_w_inc"),
+  exc_long = paste0(out_stem, "sub_l_exc"),
+  exc_wide = paste0(out_stem, "sub_w_exc"),
+  cohort = c(
+    list(int_coh), 
+    list(ext_coh), 
+    list(adhd_coh), 
+    list(asd_coh), 
+    list(nvi_coh),
+    list(lan_coh)),
+  vars = c(
+    list(c("int_raw_", "int_age_", exp_cov.vars)), 
+     list(c("ext_raw_", "ext_age_", exp_cov.vars)), 
+     list(c("adhd_raw_", "adhd_age_", exp_cov.vars)), 
+     list(c("asd_raw_", "asd_age_", exp_cov.vars)), 
+     list(c("nvi_raw_", "nvi_age_", exp_cov.vars)), 
+     list(c("lan_raw_", "lan_age_", exp_cov.vars))))
+
+save.image()
+  
+## ---- Drop variables ---------------------------------------------------------
+miss.ref %>%
+  pmap(function(new_vec, vars, cohort, ...){
+    
+    dh.defineCases(
+      df = "mh_df", 
+      vars = unlist(vars),
+      type = "all", 
+      new_obj = new_vec,
+      checks = FALSE, 
+      conns = conns[cohort])
+    
+  })
+
+datashield.workspace_save(conns, "mhtraj_14a")
+conns <- datashield.login(logindata, restore = "mhtraj_14a")
+
+## ---- Create included subset, long -------------------------------------------  
+miss.ref %>%
+  pmap(function(new_vec, inc_long, cohort, ...){
+    
+    ds.dataFrameSubset(
+      df.name = "mh_df", 
+      V1.name = new_vec, 
+      V2.name = "1",
+      Boolean.operator = "==",
+      keep.NAs = FALSE, 
+      newobj = inc_long, 
+      datasources = conns[unlist(cohort)])
+    
+  }) 
+
+datashield.workspace_save(conns, "mhtraj_14b")
+conns <- datashield.login(logindata, restore = "mhtraj_14b")
+
+## ---- Create excluded subset, long -------------------------------------------
+miss.ref %>%
+  pmap(function(new_vec, exc_long, cohort, ...){
+    
+    ds.dataFrameSubset(
+      df.name = "mh_df", 
+      V1.name = new_vec, 
+      V2.name = "0",
+      Boolean.operator = "==",
+      keep.NAs = FALSE, 
+      newobj = exc_long, 
+      datasources = conns[cohort])
+    
+    }) 
+
+datashield.workspace_save(conns, "mhtraj_14c")
+conns <- datashield.login(logindata, restore = "mhtraj_14c")
+
+## ---- Create included subset, wide -------------------------------------------
+miss.ref %>%
+  pmap(function(inc_long, age_var, outcome, inc_wide, cohort, ...){
+    
+    ds.reShape(
+      data.name = inc_long,
+      timevar.name = age_var,
+      idvar.name = "child_id",
+      v.names = outcome,
+      direction = "wide", 
+      newobj = inc_wide, 
+      datasources = conns[cohort])
+    
+  }) 
+
+datashield.workspace_save(conns, "mhtraj_14d")
+conns <- datashield.login(logindata, restore = "mhtraj_14d")
+
+## ---- Create excluded subset, wide -------------------------------------------
+miss.ref %>%
+  pmap(function(exc_long, age_var, outcome, exc_wide, cohort, ...){
+    
+    ds.reShape(
+      data.name = exc_long,
+      timevar.name = age_var,
+      idvar.name = "child_id",
+      v.names = outcome,
+      direction = "wide", 
+      newobj = exc_wide, 
+      datasources = conns[cohort])
+    
+  }) 
+
+datashield.workspace_save(conns, "mhtraj_14e")
+conns <- datashield.login(logindata, restore = "mhtraj_14e")
+
+################################################################################
+# Tidy up  
+################################################################################
+dh.tidyEnv(
+  obj = c("nonrep", "yearrep", "mhrep", miss.ref$inc_long, miss.ref$inc_wide,
+          miss.ref$exc_long, miss.ref$exc_wide, "mh_df", "mh_df_w", "any_exp",
+          "any_out", "n_complete", "exp_out", "exp_out_df_l", "exp_out_df_w",
+          "any_cov", "analysis_df_l", "analysis_df_w", "excluded_w"), 
+  type = "keep")
+
+datashield.workspace_save(conns, "mhtraj_14")
+conns <- datashield.login(logindata, restore = "mhtraj_14")
+
+ds.ls()
+
+################################################################################
+# Create Male and Female subsets  
+################################################################################
+
+## ---- Male -------------------------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df_l", 
+  V1.name = "analysis_df_l$sex", 
+  V2.name = "1",
+  Boolean.operator = "==", 
+  newobj = "analysis_df_l_m")
+
+## ---- Female -----------------------------------------------------------------
+ds.dataFrameSubset(
+  df.name = "analysis_df_l", 
+  V1.name = "analysis_df_l$sex", 
+  V2.name = "1",
+  Boolean.operator = "==", 
+  newobj = "analysis_df_l_f")
+
+datashield.workspace_save(conns, "mhtraj_15")
+conns <- datashield.login(logindata, restore = "mhtraj_15")
+
+
+
+
+
+
+################################################################################
+# Create outcomes at different timepoints to describe missingness  
+################################################################################
+out_prefix <- c("adhd_", "ext_", "int_", "lan_", "nvi_", "asd_") 
+
+out_prefix %>%
+  map(
+    ~dh.makeStrata(
+      df = "analysis_df_l", 
+      id_var = "child_id", 
+      age_var = paste0(.x, "age_"), 
+      var_to_subset = paste0(.x, "pc_"), 
+      bands = c(0, 4, 4, 8, 8, 12, 12, 18),
+      band_action = "ge_l",
+      mult_action = "earliest", 
+      new_obj = paste0(.x, "m_s"), 
+      checks = FALSE, 
+      conns = conns["raine"]))
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_13")
+conns <- datashield.login(logindata, restore = "mhtraj_13")
+
+ds.ls()
+
+
+
 
 
 
