@@ -6,7 +6,7 @@
 ## Email: t.cadman@bristol.ac.uk
 ################################################################################
 
-conns <- datashield.login(logindata, restore = "mhtraj_15")
+conns <- datashield.login(logindata, restore = "mh_traj")
 
 ################################################################################
 # 1. Fix columns  
@@ -36,16 +36,16 @@ avail_int <- dh.getStats(
   df = "analysis_df_l",
   vars = c("int_pc_", "int_raw_", "int_instr_"))
 
-int_coh_any <- avail_int$continuous %>% cohAvail("int_pc_")
+int_coh_any <- avail_int$continuous %>% cohAvail("int_raw_")
 
 int_scatter_1 <- ds.scatterPlot(
-  x = "analysis_df_l$int_age_", 
-  y = "analysis_df_l$int_pc_", 
+  x = "analysis_df_l$age", 
+  y = "analysis_df_l$int_raw_", 
   datasources = conns[int_coh_any[1:(length(int_coh_any)/2)]])
 
 int_scatter_2 <- ds.scatterPlot(
-  x = "analysis_df_l$int_age_", 
-  y = "analysis_df_l$int_pc_", 
+  x = "analysis_df_l$age", 
+  y = "analysis_df_l$int_raw_", 
   datasources = conns[int_coh_any[((length(int_coh_any)/2)+1):length(int_coh_any)]])
 
 int_coh <- int_coh_any[!int_coh_any %in% c("ninfea")]
@@ -102,13 +102,13 @@ adhd_scatter_2 <- ds.scatterPlot(
   y = "analysis_df_l$adhd_pc_", 
   datasources = conns[adhd_coh_any[6:length(adhd_coh_any)]])
 
-adhd_coh <- adhd_coh_any[!adhd_coh_any %in% c("genr")]
+adhd_coh <- adhd_coh_any[!adhd_coh_any %in% c("genr", "ninfea")]
 
 occ_adhd <- tibble(
-  cohort = c("alspac", "chop", "dnbc", "eden", "inma", "moba", "ninfea", 
+  cohort = c("alspac", "chop", "dnbc", "eden", "inma", "moba",  
              "raine", "rhea"),
   outcome = "adhd",
-  occasions = c(7, 2, 2, 3, 2, 4, 2, 5, 3))
+  occasions = c(7, 2, 2, 3, 2, 4, 5, 3))
 
 ################################################################################
 # 6. ASC  
@@ -124,7 +124,7 @@ asd_scatter <- ds.scatterPlot(
   y = "analysis_df_l$asd_pc_", 
   datasources = conns[asd_coh_any])
 
-asd_coh <- c("inma", "moba")
+asd_coh <- c("moba")
 
 occ_asd <- tibble(
   cohort = c("inma", "moba"), 

@@ -8,68 +8,11 @@
 
 library(dsHelper)
 
-conns <- datashield.login(logindata, restore = "mhtraj_15")
-
+conns <- datashield.login(logindata, restore = "mh_traj")
 ################################################################################
 # 1. MISSING DATA  
 ################################################################################
-################################################################################
-# Create subsets to compare missingness at different age periods  
-################################################################################
 
-## ---- Reference table --------------------------------------------------------
-miss_band.ref <- tibble(
-  var = rep(
-    c("int_age_", "ext_age_", "adhd_age_", "asd_age_", "nvi_age_", "lan_age_"),
-    each = 4),
-  outcome = rep(
-    c("int_raw_", "ext_raw_", "adhd_raw_", "asd_raw_", "nvi_raw_", "lan_raw_"),
-    each = 4),
-  
-  new_obj = rep(
-    c("int_band", "ext_band", "adhd_band", "asd_band", "nvi_band_", "lan_band"), 
-    each = 4),
-  value_1 = rep(c(0, 4, 8, 14), 6),
-  op_1 = rep(">=", 24), 
-  value_2 = rep(c(3, 7, 13, 17), 6),
-  op_2 = rep(rep("<="), 24), 
-  new_df = paste0(var, "b_", value_1))
-
-## ---- Define subsets ---------------------------------------------------------
-miss_band.ref %>%
-  pmap(function(var, new_obj, value_1, op_1, value_2, op_2, ...){
-    
-    .BooleTwoConditions(
-      df = "analysis_df_l", 
-      var = var,
-      newobj = new_obj, 
-      value_1 = value_1,
-      op_1 = op_1,
-      value_2 = value_2, 
-      op_2 = op_2, 
-      conns = conns)
- 
-  })
-
-## ---- Create subsets ---------------------------------------------------------
-miss_band.ref %>%
-  pmap(function(var, new_obj, value_1, op_1, value_2, op_2, new_df, ...){
-    
-    ds.dataFrameSubset(
-      df = "analysis_df_l", 
-      V1.name = new_obj,
-      V2.name = "1",
-      Boolean.operator = "==",
-      keep.NAs = TRUE, 
-      newobj = new_df)
-    
-  })
-
-## ---- Save progress ----------------------------------------------------------
-datashield.workspace_save(conns, "mhtraj_14")
-conns <- datashield.login(logindata, restore = "mhtraj_14")
-
-save.image()
 
 ################################################################################
 # 2. MODELS  
@@ -77,27 +20,28 @@ save.image()
 ################################################################################
 # Internalising  
 ################################################################################
-var_suf <-  c("_age_", "_age__m_2", "_age__m_1", "_age__m_0_5", "_age__log", 
-              "_age__0_5", "_age__2", "_age__3")
+age.vars <-  c("age_c", "age_c_m_2", "age_c_m_1", "age_c_m_0_5", "age_c_log", 
+              "age_c_0_5", "age_c_2", "age_c_3")
 
 ## ---- Make formulae ----------------------------------------------------------
 int.mod <- dh.makeLmerForm(
-  outcome = "int_pc_", 
+  outcome = "int_t_z", 
   id_var = "child_id_int", 
   fixed = "edu_rank_num",
   age_interactions = "edu_rank_num", 
-  age_vars = paste0("int", var_suf),
+  age_vars = age.vars,
   random = "intercept")
 
 ## ---- Run models -------------------------------------------------------------
 int.fit <- dh.lmeMultPoly(
-  df = "analysis_df_l_m",
+  df = "analysis_df_l",
   formulae = int.mod$formula, 
   poly_names = int.mod$polys, 
-  conns = conns[int_coh])
+  conns = conns[int.coh])
 
 save.image()
 
+ds.colnames("analysis_df_l")
 ################################################################################
 # Externalising  
 ################################################################################
@@ -211,6 +155,114 @@ nvi.fit <- dh.lmeMultPoly(
   conns = conns[nvi_coh])
 
 save.image()
+
+################################################################################
+# Additional adjustments 
+################################################################################
+################################################################################
+# Define models  
+################################################################################
+conns <- datashield.login(logindata, restore = "mhtraj_15")
+
+eth_coh <- c("alspac", "genr", "inma", "raine")
+
+sens.mod <- fit.tab %>%
+  separate(
+    col = model, 
+    into = c("poly_1", "poly_2"), 
+    sep = ",") %>%
+  mutate(outcome_var = c(
+    "int_pc_", "ext_pc_", "adhd_pc_", "asd_pc_", "lan_pc_", "nvi_pc_")) %>%
+  mutate(
+    form = paste(
+      paste0(outcome_var, "~1"), 
+      poly_1, poly_2, "edu_rank_num",
+      paste0("edu_rank_num*", poly_1), paste0("edu_rank_num*", poly_2), 
+      "(1|child_id_int)", sep = "+"),
+    eth_form = paste(
+      paste0(outcome_var, "~1"), 
+      poly_1, poly_2, "edu_rank_num",
+      paste0("edu_rank_num*", poly_1), paste0("edu_rank_num*", poly_2), 
+      "eth_bin", "(1|child_id_int)", sep = "+")) %>%
+  dplyr::select(outcome, poly_1, poly_2, form, eth_form) %>%
+  mutate(
+    cohort =  list(int_coh, ext_coh, adhd_coh, asd_coh, lan_coh, nvi_coh),
+    eth_coh = list(
+    int_coh[int_coh %in% eth_coh], 
+    ext_coh[ext_coh %in% eth_coh],  
+    adhd_coh[adhd_coh %in% eth_coh],  
+    asd_coh[asd_coh %in% eth_coh],  
+    lan_coh[lan_coh %in% eth_coh],  
+    nvi_coh[nvi_coh %in% eth_coh]))
+
+#restrict to cohorts with ethnicity information. Think about whether we need 
+#to rerun original model on restricted sample. Maybe start by not?
+
+################################################################################
+# Ethnicity analysis  
+################################################################################
+eth.fit <- sens.mod %>%
+  dplyr::filter(outcome != "ASD") %>%
+  pmap(function(eth_form, eth_coh, ...){
+    
+    ds.lmerSLMA(
+      dataName = "analysis_df_l",
+      formula = eth_form,
+      datasources = conns[unlist(cohort)])
+    
+  })
+
+################################################################################
+# Additional adjustment for child sex  
+################################################################################
+
+## ---- Males ------------------------------------------------------------------
+males.fit <- sens.mod %>%
+  pmap(function(form, cohort, ...){
+    
+    ds.lmerSLMA(
+      dataName = "analysis_df_l_m",
+      formula = form,
+      datasources = conns[unlist(cohort)])
+    
+  })
+
+## ---- Females ----------------------------------------------------------------
+females.fit <- sens.mod %>%
+  pmap(function(form, cohort, ...){
+    
+    ds.lmerSLMA(
+      dataName = "analysis_df_l_f",
+      formula = form,
+      datasources = conns[unlist(cohort)])
+    
+  })
+
+save.image()
+
+
+
+
+eth.mod$cohort
+
+
+
+)
+
+sex.mod$cohort
+
+sex.mod$eth_form
+
+int.fit$fit
+
+"int_pc_~1+int_age__m1+int_age__m_2+edu_rank_num+edu_rank_num*int_age_+edu_rank_num*int_age__m_2+(1|child_id_int)"
+
+
+fit.tab$model
+
+int.mod$formula[1]
+
+
 
 
 

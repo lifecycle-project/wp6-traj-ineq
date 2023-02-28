@@ -1,0 +1,28 @@
+stat,alspac,bib,chop,dnbc,eden,genr,inma,moba,ninfea,raine,rhea
+country,United Kingdom,United Kingdom,"Germany, Belgium, Italy, Poland, Spain",Denmark,France,Netherlands,Spain,Norway,Italy,Australia,Greece
+city_area,Greater Bristol,Bradford,"Munich, Nuremberg, Liege, Brussels, Milano, Warsaw, Reus, Tarragona",Greater Copenhagen,Nancy & Poitiers,Rotterdam,"Gipuzkoa, Sabadell, Valencia",National,"Florence, Rome, Turin",Perth,Crete
+birth_years,1991 - 1992,2007 - 2011,2002 - 2004,1996 - 2002,2003 - 2005,2002 - 2006,2003 - 2008,1999 - 2008,2005 - 2016,1989 - 1992,2007 - 2008
+ages,0 - 17,0 - 10,0 - 11,0 - 18,0 - 12,0 - 10,0 - 11,0 - 13,0 - 14,0-17,0 - 12
+sample_n,15645,13858,1678,96825,2002,9901,2270,105751,7642,2868,1458
+ext_raw_,10217,2421,700,57053,1425,6694,1335,74074,NA,2318,840
+adhd_raw_,10246,NA,662,59410,1425,NA,1542,75381,5054,2151,840
+asd_raw_,NA,NA,NA,NA,NA,NA,1267,73358,NA,NA,NA
+nvi_raw_,7030,NA,NA,NA,NA,NA,1532,NA,NA,NA,943
+lan_raw_,9663,NA,NA,NA,NA,NA,1535,NA,NA,NA,915
+int_occ,7,2,3,2,3,4,2,3,NA,6,3
+ext_occ,7,2,3,2,3,4,2,3,NA,6,3
+adhd_occ,7,NA,2,2,3,NA,2,4,2,5,3
+asd_occ,NA,NA,NA,NA,NA,NA,2,3,NA,NA,NA
+nvi_occ,2,NA,NA,NA,NA,NA,4,NA,NA,NA,4
+lan_occ,4,NA,NA,NA,NA,NA,3,NA,NA,NA,3
+int_raw_,10228,2421,700,59430,1426,6644,1335,73821,NA,2317,840
+int_obs,46756,2421,1610,93522,3349,18338,2044,197080,NA,9443,1660
+ext_obs,47444,2421,1610,91199,3349,18551,2043,205691,NA,9765,1659
+adhd_obs,48683,NA,1088,93474,3349,NA,3713,233000,5705,6754,1654
+asd_obs,NA,NA,NA,NA,NA,NA,1267,204117,NA,NA,NA
+nvi_obs,7789,NA,NA,NA,NA,NA,2676,NA,NA,NA,2253
+lan_obs,16881,NA,NA,NA,NA,NA,2702,NA,NA,NA,1704
+sex_2,5405 (48.76),2025 (49.23),385 (52.88),29208 (49.14),789 (47.64),3583 (49.65),782 (49.15),36948 (48.85),3127 (49.15),1197 (48.98),447 (46.86)
+eth_bin_2,177 (1.62),2781 (67.63),0 (NaN),0 (NaN),0 (NaN),2804 (38.91),50 (3.15),0 (NaN),0 (NaN),257 (10.52),3 (0.32)
+edu_m_2,7591 (68.48),574 (13.96),370 (50.82),12791 (21.52),633 (38.22),3137 (43.47),658 (41.36),23280 (30.78),2052 (32.25),655 (26.8),488 (51.15)
+edu_m_3,1974 (17.81),2449 (59.54),135 (18.54),15039 (25.3),94 (5.68),674 (9.34),346 (21.75),1489 (1.97),288 (4.53),1304 (53.36),157 (16.46)

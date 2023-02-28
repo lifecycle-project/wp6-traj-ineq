@@ -1,0 +1,13 @@
+cohort,cohort_near,country,city_area,design,birth_years,ages,cohort_ns
+alspac,ALSPAC,United Kingdom,Greater Bristol,Prospective,1991 - 1992,0 - 17,11085
+bib,BiB,United Kingdom,Bradford,Prospective,2007 - 2011,0 - 10,4113
+chop,CHOP,"Germany, Belgium, Italy, Poland, Spain","Munich, Nuremberg, Liege, Brussels, Milano, Warsaw, Reus, Tarragona",Prospective,2002 - 2004,0 - 11,728
+dnbc,DNBC,Denmark,Greater Copenhagen,Prospective,1996 - 2002,0 - 18,59438
+eden,EDEN,France,Nancy & Poitiers,Prospective,2003 - 2005,0 - 12,1656
+elfe,ELFE,France,NA,Prospective,2011,0 - 9,13388
+genr,Gen-R,Netherlands,Rotterdam,Prospective,2002 - 2006,0 - 10,7216
+inma,INMA,Spain,"Gipuzkoa, Sabadell, Valencia",Prospective,2003 - 2008,0 - 11,1591
+moba,MoBa,Norway,NA,Prospective,1999 - 2008,0 - 13,75629
+ninfea,NINFEA,Italy,"Florence, Rome, Turin",Prospective,2005 - 2016,0 - 14,6362
+raine,Raine,Australia,Perth,Prospective,1989 - 1992,Jan/17,2444
+rhea,Rhea,Greece,Crete,Prospective,2007 - 2008,0 - 12,954

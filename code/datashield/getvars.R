@@ -445,6 +445,209 @@ datashield.workspace_save(conns, "mhtraj_9")
 conns <- datashield.login(logindata, restore = "mhtraj_9")
 
 ################################################################################
+# Choose one measure per cohort per outcome  
+################################################################################
+################################################################################
+# Define subsets  
+################################################################################
+
+## ---- Master table -----------------------------------------------------------
+master_out.ref <- tibble(
+  outcome = c("int", "ext", "adhd"),
+  out_var = paste0(outcome, "_raw_"),
+  age_var = paste0(outcome, "_age_"),
+  instr_var = paste0(outcome, "_instr_"))
+
+## ---- ALSPAC -----------------------------------------------------------------
+alspac_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "alspac", 
+    instr_name = "sdq", 
+    instr_num = 47)
+
+## ---- CHOP -------------------------------------------------------------------
+chop_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "chop", 
+    instr_name = "sdq", 
+    instr_num = 47)
+
+## ---- DNBC -------------------------------------------------------------------
+dnbc_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "dnbc", 
+    instr_name = "sdq", 
+    instr_num = 47)
+
+## ---- EDEN -------------------------------------------------------------------
+eden_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "eden", 
+    instr_name = "sdq", 
+    instr_num = 47)
+
+## ---- GEN-R ------------------------------------------------------------------
+genr_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "genr", 
+    instr_name = c("cbcl", "cbcl", "cprs-d"), 
+    instr_num = c(13, 13, 20))
+
+## ---- INMA -------------------------------------------------------------------
+inma_out.ref <- tibble(
+  outcome = "adhd",
+  out_var = "adhd_raw_",
+  instr_var = "adhd_instr_",
+  age_var = "adhd_age_",
+  cohort = "inma",
+  instr_name = "cprs-d", 
+  instr_num = 20)
+
+## ---- MoBa -------------------------------------------------------------------
+moba_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "moba", 
+    instr_name = "cbcl", 
+    instr_num = c(13, 13, 13))
+
+## ---- Raine ------------------------------------------------------------------
+raine_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "raine", 
+    instr_name = "cbcl", 
+    instr_num = 13)
+
+## ---- Rhea -------------------------------------------------------------------
+rhea_out.ref <- master_out.ref %>%
+  mutate(
+    cohort = "rhea", 
+    instr_name = c("cbcl", "cbcl", "cprs-d"), 
+    instr_num = c(13, 13, 20))
+
+## ---- Combine ----------------------------------------------------------------
+out.ref <- bind_rows(alspac_out.ref, chop_out.ref, dnbc_out.ref, eden_out.ref, 
+                     genr_out.ref, inma_out.ref, moba_out.ref, raine_out.ref, 
+                     rhea_out.ref)
+
+################################################################################
+# Make subsets  
+################################################################################
+out.ref %>%
+  pmap(function(outcome, instr_var, cohort, instr_name, instr_num, ...){
+    
+    ds.dataFrameSubset(
+      df.name = "mh_df", 
+      V1.name = paste0("mh_df$", instr_var), 
+      V2.name = as.character(instr_num), 
+      Boolean.operator = "==", 
+      keep.NAs = FALSE, 
+      newobj = paste0(outcome, "_sub"), 
+      datasources = conns[cohort])
+    
+  })
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_10")
+conns <- datashield.login(logindata, restore = "mhtraj_10")
+
+################################################################################
+# First we keep only the variables we need
+################################################################################
+out.ref %>%
+  pmap(function(outcome, out_var, instr_var, cohort, age_var, instr_name, ...){
+    
+    dh.dropCols(
+      df = paste0(outcome, "_sub"), 
+      vars = c("child_id", out_var, age_var, instr_var),
+      type = "keep",
+      conns = conns[cohort])
+    
+  })
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_11")
+conns <- datashield.login(logindata, restore = "mhtraj_11")
+
+################################################################################
+# Merge to create one MH dataset  
+################################################################################
+
+## ---- All cohorts except inma ------------------------------------------------
+ds.merge(
+  x.name = "int_sub",
+  y.name = "ext_sub",
+  by.x.names = "child_id",
+  by.y.names = "child_id",
+  all.x = TRUE,
+  all.y = TRUE,
+  newobj = "instr_df_tmp", 
+  datasources = conns[names(conns) != "inma"])
+
+ds.merge(
+  x.name = "instr_df_tmp",
+  y.name = "adhd_sub",
+  by.x.names = "child_id",
+  by.y.names = "child_id",
+  all.x = TRUE,
+  all.y = TRUE,
+  newobj = "mh_instr_df", 
+  datasources = conns[names(conns) != "inma"])
+
+ds.colnames("instr_df_tmp", datasources = conns["alspac"])
+ds.colnames("adhd_sub", datasources = conns["alspac"])
+
+ds.assign("adhd_sub", "mh_instr_df", datasources = conns["inma"])
+
+## ---- Save progress ----------------------------------------------------------
+datashield.workspace_save(conns, "mhtraj_12")
+conns <- datashield.login(logindata, restore = "mhtraj_12")
+
+
+## ---- Now merge these back together ------------------------------------------
+
+
+
+ds.table("mh_df$ext_age_", "mh_df$ext_instr_", datasources = conns["chop"], 
+         useNA = "always")
+
+
+ds.dataFrameSubset(
+  df.name = "mh_df", 
+  V1.name = "mh_df$ext_instr_", 
+  V2.name = "13", 
+  Boolean.operator = "==", 
+  keep.NAs = FALSE, 
+  newobj = "cbcl", 
+  datasources = conns["chop"])
+
+ds.dataFrameSubset(
+  df.name = "mh_df", 
+  V1.name = "mh_df$ext_instr_", 
+  V2.name = "47", 
+  Boolean.operator = "==", 
+  keep.NAs = FALSE, 
+  newobj = "sdq", 
+  datasources = conns["chop"])
+
+ds.table("cbcl$ext_age_", datasources = conns["chop"], useNA = "always")
+
+ds.summary("cbcl$ext_age_", datasources = conns["chop"])
+ds.summary("sdq$ext_age_", datasources = conns["chop"])
+
+
+## ---- Ninfea -----------------------------------------------------------------
+
+outcome.ref <- tibble(
+  outcome = c("internalising")
+  
+  cohort = "alspac"
+)
+
+
+
+
+
+################################################################################
 # Create wide format of original dataset  
 ################################################################################
 ds.reShape(
@@ -713,12 +916,34 @@ ds.dataFrameSubset(
 ds.dataFrameSubset(
   df.name = "analysis_df_l", 
   V1.name = "analysis_df_l$sex", 
-  V2.name = "1",
+  V2.name = "2",
   Boolean.operator = "==", 
   newobj = "analysis_df_l_f")
 
 datashield.workspace_save(conns, "mhtraj_15")
 conns <- datashield.login(logindata, restore = "mhtraj_15")
+
+################################################################################
+# Create z-scores  
+################################################################################
+
+
+
+
+
+
+
+
+################################################################################
+# Create ethnicity subset  
+################################################################################
+
+## ---- Define cases -----------------------------------------------------------
+
+
+## ---- Create subset ----------------------------------------------------------
+
+
 
 
 
